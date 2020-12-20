@@ -26,7 +26,7 @@ job "getlock" {
         image = "agrrh/getlock:v0.1.0"
 
         port_map {
-          http = 5000
+          api = 8000
         }
       }
 
