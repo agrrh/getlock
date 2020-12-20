@@ -1,1 +1,7 @@
 config.yml
+
+# Docs
+*.md
+
+# Deploy
+nomad/
