@@ -30,7 +30,7 @@ Let's we have some task which takes up to 1 hour yet could be triggered from num
 We choose some random yet valid [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) as our job ID. It should be the same for all workers you decide to limit concurrency for:
 
 ```
-MY_JOB_UUID=28c9c1be-7bb8-4e8c-b22e-c16402a421d5
+YOUR_JOB_UUID=28c9c1be-7bb8-4e8c-b22e-c16402a421d5
 ```
 
 Worker logic then could look like following:
@@ -38,7 +38,7 @@ Worker logic then could look like following:
 ```sh
 echo "Checking if another job is running ..."
 
-while ["$(curl https://getlock.tech/${SOME_UUID} | jq '.locked')" = "true"]; do
+while ["$(curl https://getlock.tech/${YOUR_JOB_UUID} | jq '.locked')" = "true"]; do
   echo "Locked, waiting for free spot ..."
   sleep 1
 done
@@ -49,7 +49,7 @@ echo "Acquiring lock ..."
 
 # NOTE Prefer lower TTL values while refreshing lock periodically
 #   to not waste time in case job has failed
-curl -X PUT -d ttl=$[60*60] https://getlock.tech/${SOME_UUID}
+curl -X PUT -d ttl=$[60*60] https://getlock.tech/${YOUR_JOB_UUID}
 
 echo "Starting payload ..."
 
@@ -59,7 +59,7 @@ echo "Payload done"
 
 echo "Releasing lock ..."
 
-curl -X DELETE https://getlock.tech/${SOME_UUID}
+curl -X DELETE https://getlock.tech/${YOUR_JOB_UUID}
 
 echo "Job done"
 ```
