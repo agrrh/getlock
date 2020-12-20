@@ -65,3 +65,8 @@ echo "Job done"
 ```
 
 I also recommend you to consider using awesome [httpie](https://httpie.io/) tool.
+
+# Credits
+
+- [Consul Sessions](https://www.consul.io/api-docs/session) - inspiration
+- [agrrh](https://agrrh.com/) - implementation
