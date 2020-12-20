@@ -12,7 +12,9 @@ RUN pip install \
   mkdocs==1.1.2 \
   mkdocs-material==6.1.7
 
-COPY ./ ./
+COPY ./mkdocs.yml ./
+COPY ./*.md ./
+COPY ./docs ./docs
 
 RUN mkdocs build
 
