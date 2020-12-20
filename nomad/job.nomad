@@ -11,10 +11,10 @@ job "getlock" {
     max_parallel = 1
   }
 
-  group "app" {
+  group "api" {
     count = 1
 
-    task "getlock-app" {
+    task "getlock" {
       driver = "docker"
 
       env {
@@ -33,13 +33,13 @@ job "getlock" {
       service {
         check {
           type     = "http"
-          port     = "http"
+          port     = "api"
           path     = "/health"
           interval = "10s"
           timeout  = "1s"
         }
 
-        port = "http"
+        port = "api"
 
         tags = [
           "traefik.enable=true",
@@ -64,7 +64,7 @@ job "getlock" {
         memory = 128
         network {
           mbits = 10
-          port "http" {}
+          port "api" {}
         }
       }
 
