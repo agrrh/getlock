@@ -16,6 +16,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # TODO Some persistent storage
+#   https://github.com/hashicorp/nomad-guides/blob/master/application-deployment/redis/redis.nomad
 locks = {}
 
 
