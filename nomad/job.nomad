@@ -74,4 +74,62 @@ job "getlock" {
       }
     }
   }
+
+  group "docs" {
+    count = 2
+
+    task "nginx" {
+      driver = "docker"
+
+      config {
+        force_pull = true
+        image = "agrrh/getlock-docs:v0.1.0"
+
+        port_map {
+          http = 80
+        }
+      }
+
+      service {
+        check {
+          type     = "http"
+          port     = "http"
+          path     = "/"
+          interval = "10s"
+          timeout  = "1s"
+        }
+
+        port = "http"
+
+        tags = [
+          "traefik.enable=true",
+          # middlewares
+          "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
+          # http
+          "traefik.http.routers.http-getlock-tech-api.entrypoints=http",
+          "traefik.http.routers.http-getlock-tech-api.rule=Host(\"getlock.tech\")",
+          "traefik.http.routers.http-getlock-tech-api.middlewares=redir-https",
+          # https
+          "traefik.http.routers.https-getlock-tech-api.entrypoints=https",
+          "traefik.http.routers.https-getlock-tech-api.rule=Host(\"getlock.tech\")",
+          "traefik.http.routers.https-getlock-tech-api.tls=true",
+          "traefik.http.routers.https-getlock-tech-api.tls.certresolver=http",
+        ]
+      }
+
+      resources {
+        cpu    = 128
+        memory = 128
+        network {
+          mbits = 10
+          port "http" {}
+        }
+      }
+
+      logs {
+        max_files     = 2
+        max_file_size = 100
+      }
+    }
+  }
 }

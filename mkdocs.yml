@@ -1,0 +1,29 @@
+---
+
+site_name: GetLock
+
+copyright: Copyright &copy; Kirill Kovalev / agrrh
+
+repo_url: https://github.com/agrrh/getlock
+
+nav:
+  - Home: index.md
+  - Changelog: changelog.md
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+  icon:
+    logo: material/lock
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - codehilite
+
+extra:
+  social:
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/agrrh/getlock
+    - icon: fontawesome/brands/github
+      link: https://github.com/agrrh/getlock
