@@ -95,11 +95,20 @@ class LockManager(Resource):
         }, 200
 
 
+# TODO Add some logic behind it
+# TODO Move to separate file
+class Health(Resource):
+    def get(self):
+        return {
+            "message": "okay"
+        }, 200
+
+
 # TODO Consider separate create/refresh paths
+api.add_resource(Health, "/health")
 api.add_resource(LockManager, "/<uuid:lock_id>")
 
 # TODO Add metrics
-# TODO Add health check
 
 if __name__ == "__main__":
     app.run(**config.flask)
