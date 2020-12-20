@@ -106,14 +106,14 @@ job "getlock" {
           # middlewares
           "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
           # http
-          "traefik.http.routers.http-getlock-tech-api.entrypoints=http",
-          "traefik.http.routers.http-getlock-tech-api.rule=Host(\"getlock.tech\")",
-          "traefik.http.routers.http-getlock-tech-api.middlewares=redir-https",
+          "traefik.http.routers.http-getlock-tech-docs.entrypoints=http",
+          "traefik.http.routers.http-getlock-tech-docs.rule=Host(\"getlock.tech\")",
+          "traefik.http.routers.http-getlock-tech-docs.middlewares=redir-https",
           # https
-          "traefik.http.routers.https-getlock-tech-api.entrypoints=https",
-          "traefik.http.routers.https-getlock-tech-api.rule=Host(\"getlock.tech\")",
-          "traefik.http.routers.https-getlock-tech-api.tls=true",
-          "traefik.http.routers.https-getlock-tech-api.tls.certresolver=http",
+          "traefik.http.routers.https-getlock-tech-docs.entrypoints=https",
+          "traefik.http.routers.https-getlock-tech-docs.rule=Host(\"getlock.tech\")",
+          "traefik.http.routers.https-getlock-tech-docs.tls=true",
+          "traefik.http.routers.https-getlock-tech-docs.tls.certresolver=http",
         ]
       }
 
