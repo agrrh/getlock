@@ -48,11 +48,11 @@ job "getlock" {
           "traefik.http.middlewares.strip-v1.stripprefix.prefixes=/v1",
           # http
           "traefik.http.routers.http-getlock-tech-api.entrypoints=http",
-          "traefik.http.routers.http-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1\")",
+          "traefik.http.routers.http-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
           "traefik.http.routers.http-getlock-tech-api.middlewares=redir-https,strip-v1",
           # https
           "traefik.http.routers.https-getlock-tech-api.entrypoints=https",
-          "traefik.http.routers.https-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1\")",
+          "traefik.http.routers.https-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
           "traefik.http.routers.https-getlock-tech-api.middlewares=strip-v1",
           "traefik.http.routers.https-getlock-tech-api.tls=true",
           "traefik.http.routers.https-getlock-tech-api.tls.certresolver=http",
