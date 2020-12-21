@@ -1,5 +1,7 @@
 # Info
 
+>Distributed locks for everyone!
+
 [GetLock.tech](https://getlock.tech/) service exists for those who need to get some kind of session lock or simple semaphore-like mechanism.
 
 Actual case was absence of proper concurrency limit for [BitBucket Pipelines](https://jira.atlassian.com/browse/BCLOUD-12821).
@@ -25,7 +27,7 @@ Actual case was absence of proper concurrency limit for [BitBucket Pipelines](ht
 
 ## Example
 
-Let's we have some task which takes up to 1 hour yet could be triggered from number of workers. It concurrency required to be limited to single worker at a time.
+Let's say we have some task which takes up to 1 hour yet could be triggered from number of workers. It concurrency required to be limited to single worker at a time.
 
 We choose some random yet valid [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier) as our job ID. It should be the same for all workers you decide to limit concurrency for:
 
