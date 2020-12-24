@@ -14,7 +14,7 @@ Actual case was absence of proper concurrency limit for [BitBucket Pipelines](ht
 
   Params:
 
-  - `ttl` - float, in seconds, default is `60.0`.
+    - `ttl` - float, in seconds, default is `60.0`.
 
 - `GET https://getlock.tech/v1/<uuid>`
 
@@ -40,7 +40,7 @@ Worker logic then could look like following:
 ```sh
 echo "Checking if another job is running ..."
 
-while ["$(curl https://getlock.tech/v1/${YOUR_JOB_UUID} | jq '.locked')" = "true"]; do
+while [ "$(curl \"https://getlock.tech/v1/${YOUR_JOB_UUID}\" | jq '.locked')" = "true" ]; do
   echo "Locked, waiting for free spot ..."
   sleep 1
 done
@@ -51,7 +51,7 @@ echo "Acquiring lock ..."
 
 # NOTE Prefer lower TTL values while refreshing lock periodically
 #   to not waste time in case job has failed
-curl -X PUT -d ttl=$[60*60] https://getlock.tech/v1/${YOUR_JOB_UUID}
+curl -X PUT -d ttl=3600 "https://getlock.tech/v1/${YOUR_JOB_UUID}"
 
 echo "Starting payload ..."
 
@@ -61,7 +61,7 @@ echo "Payload done"
 
 echo "Releasing lock ..."
 
-curl -X DELETE https://getlock.tech/v1/${YOUR_JOB_UUID}
+curl -X DELETE "https://getlock.tech/v1/${YOUR_JOB_UUID}"
 
 echo "Job done"
 ```
