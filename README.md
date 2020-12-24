@@ -8,7 +8,7 @@ Actual case was absence of proper concurrency limit for [BitBucket Pipelines](ht
 
 # Usage
 
-##### `PUT https://getlock.tech/v1/<uuid>`
+### `PUT https://getlock.tech/v1/<uuid>`
 
 Create new lock or update existing one.
 
@@ -21,7 +21,7 @@ Response codes:
 - `201` created
 - `200` refreshed
 
-##### `GET https://getlock.tech/v1/<uuid>`
+### `GET https://getlock.tech/v1/<uuid>`
 
 Check if lock is active.
 
@@ -30,7 +30,7 @@ Response codes:
 - `423` for active
 - `404` for other cases
 
-##### `DELETE https://getlock.tech/v1/<uuid>`
+### `DELETE https://getlock.tech/v1/<uuid>`
 
 Release existing lock.
 
