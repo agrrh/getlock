@@ -105,6 +105,15 @@ class LockManager(Resource):
         }, 200
 
 
+class LockCatalog(Resource):
+    def get(self):
+        return {
+            "message": "okay",
+            "locks": {lock.id: lock.__dict__ for lock_id, lock in locks.items()},
+            "locks_count": len(locks),
+        }, 200
+
+
 # TODO Add some logic behind it
 # TODO Move to separate file
 class Health(Resource):
@@ -117,6 +126,7 @@ class Health(Resource):
 # TODO Consider separate create/refresh paths
 api.add_resource(Health, "/health")
 api.add_resource(LockManager, "/<uuid:lock_id>")
+api.add_resource(LockCatalog, "/locks")
 
 # TODO Add metrics
 
