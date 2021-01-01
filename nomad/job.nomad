@@ -11,8 +11,56 @@ job "getlock" {
     max_parallel = 1
   }
 
-  group "api" {
+  group "storage" {
     count = 1
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 300
+    }
+
+    task "redis" {
+      driver = "docker"
+
+      config {
+        force_pull = true
+        image = "redis:5.0.10"
+
+        port_map {
+          redis = 6379
+        }
+      }
+
+      service {
+        check {
+          type     = "tcp"
+          port     = "redis"
+          interval = "10s"
+          timeout  = "2s"
+        }
+
+        port = "redis"
+      }
+
+      resources {
+        cpu    = 128
+        memory = 256
+        network {
+          mbits = 10
+          port "redis" {}
+        }
+      }
+
+      logs {
+        max_files     = 2
+        max_file_size = 100
+      }
+    }
+  }
+
+  group "api" {
+    count = 2
 
     task "getlock" {
       driver = "docker"

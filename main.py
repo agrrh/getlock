@@ -7,6 +7,8 @@ from box import Box
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 
+import redis
+
 config = Box.from_yaml(
     filename=os.environ.get("CONFIG_PATH", "./config.example.yml"),
     Loader=yaml.FullLoader,
@@ -14,6 +16,8 @@ config = Box.from_yaml(
 
 app = Flask(__name__)
 api = Api(app)
+
+conn = redis.Redis(**config.redis.host)
 
 # TODO Some persistent storage
 #   https://github.com/hashicorp/nomad-guides/blob/master/application-deployment/redis/redis.nomad
