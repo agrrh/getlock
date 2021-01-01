@@ -1,6 +1,6 @@
 from flask_restful import Resource
 
-from .getlock import locks
+from lib.lock_manager import locks
 
 
 class LockCatalog(Resource):

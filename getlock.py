@@ -22,10 +22,6 @@ api = Api(app)
 
 conn = redis.Redis(**config.redis.host)
 
-# TODO Some persistent storage
-#   https://github.com/hashicorp/nomad-guides/blob/master/application-deployment/redis/redis.nomad
-locks = {}
-
 # FIXME Rename file to not import from main
 
 

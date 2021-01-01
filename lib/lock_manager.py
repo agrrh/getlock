@@ -1,7 +1,10 @@
 from flask_restful import Resource, reqparse
 
-from lock import Lock
-from .getlock import locks
+from lib.lock import Lock
+
+# TODO Some persistent storage
+#   https://github.com/hashicorp/nomad-guides/blob/master/application-deployment/redis/redis.nomad
+locks = {}
 
 
 class LockManager(Resource):
