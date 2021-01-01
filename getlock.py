@@ -22,8 +22,6 @@ api = Api(app)
 
 conn = redis.Redis(**config.redis)
 
-# FIXME Rename file to not import from main
-
 
 # TODO Consider separate create/refresh paths
 api.add_resource(Health, "/health")
