@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 
 from lock import Lock
-from .main import locks
+from .getlock import locks
 
 
 class LockManager(Resource):
