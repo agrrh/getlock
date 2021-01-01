@@ -1,4 +1,3 @@
-import time
 import yaml
 import os
 
@@ -6,6 +5,8 @@ from box import Box
 
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+
+from lib.lock import Lock
 
 import redis
 
@@ -22,34 +23,6 @@ conn = redis.Redis(**config.redis.host)
 # TODO Some persistent storage
 #   https://github.com/hashicorp/nomad-guides/blob/master/application-deployment/redis/redis.nomad
 locks = {}
-
-
-# TODO Move to separate file
-# IDEA Think of some human-friendly format, like docker names-generator
-#   https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go
-# IDEA Is it possible to use some inline docs + mkdocs?
-class Lock(object):
-    # TODO Consider adding time left property
-    # TODO Use integers for timings since we're not operationg fractions smaller than a second
-    def __init__(self, id: str, ttl=60.0):
-        self.id = id
-        self.timestamp = time.time()
-        self.ttl = ttl
-        self.expires = self.timestamp + self.ttl
-        # REVIEW Why actually?
-        self.refreshed = []
-
-    # FIXME Should be a roperty
-    def is_active(self):
-        return self.expires > time.time()
-
-    def refresh(self):
-        self.refreshed.append(time.time())
-
-        if len(self.refreshed) > 10:
-            self.refreshed = self.refreshed[:10]
-
-        self.expires = time.time() + self.ttl
 
 
 # TODO Move to separate file
