@@ -20,7 +20,7 @@ config = Box.from_yaml(
 app = Flask(__name__)
 api = Api(app)
 
-conn = redis.Redis(**config.redis.host)
+conn = redis.Redis(**config.redis)
 
 # FIXME Rename file to not import from main
 
