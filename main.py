@@ -8,6 +8,7 @@ from flask_restful import Resource, Api
 
 import redis
 
+from lib.health import Health
 from lib.lock_manager import LockManager
 
 config = Box.from_yaml(
@@ -33,15 +34,6 @@ class LockCatalog(Resource):
             "message": "okay",
             "locks": {lock.id: lock.__dict__ for lock_id, lock in locks.items()},
             "locks_count": len(locks),
-        }, 200
-
-
-# TODO Add some logic behind it
-# TODO Move to separate file
-class Health(Resource):
-    def get(self):
-        return {
-            "message": "okay"
         }, 200
 
 
