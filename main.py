@@ -4,12 +4,13 @@ import os
 from box import Box
 
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
 
 import redis
 
 from lib.health import Health
 from lib.lock_manager import LockManager
+from lib.lock_catalog import LockCatalog
 
 config = Box.from_yaml(
     filename=os.environ.get("CONFIG_PATH", "./config.example.yml"),
@@ -26,15 +27,6 @@ conn = redis.Redis(**config.redis.host)
 locks = {}
 
 # FIXME Rename file to not import from main
-
-
-class LockCatalog(Resource):
-    def get(self):
-        return {
-            "message": "okay",
-            "locks": {lock.id: lock.__dict__ for lock_id, lock in locks.items()},
-            "locks_count": len(locks),
-        }, 200
 
 
 # TODO Consider separate create/refresh paths
