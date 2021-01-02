@@ -3,14 +3,6 @@ job "getlock" {
 
   priority = 80
 
-  constraint {
-    distinct_hosts = "true"
-  }
-
-  update {
-    max_parallel = 1
-  }
-
   group "storage" {
     count = 1
 
@@ -33,6 +25,8 @@ job "getlock" {
       }
 
       service {
+        name = "getlock-storage-redis"
+
         check {
           type     = "tcp"
           port     = "redis"
@@ -51,27 +45,52 @@ job "getlock" {
           port "redis" {}
         }
       }
-
-      logs {
-        max_files     = 2
-        max_file_size = 100
-      }
     }
   }
 
   group "api" {
     count = 2
 
+    update {
+      max_parallel = 1
+    }
+
     task "getlock" {
       driver = "docker"
 
       env {
-        CONFIG_PATH = "./config.example.yml"
+        CONFIG_PATH = "./config.yml"
+      }
+
+      template {
+        data = <<EOF
+---
+
+flask:
+  debug: false
+  threaded: true
+  host: 0.0.0.0
+  port: 8000
+
+{{ range service "getlock-storage-redis" }}
+redis:
+  host: {{ .Address }}
+  port: {{ .Port }}
+  db: 0
+  password: null
+{{ end }}
+EOF
+
+        destination   = "local/config.yml"
       }
 
       config {
         force_pull = true
         image = "agrrh/getlock:v0.1.0"
+
+        volumes = [
+          "local/config.yml:/app/config.yml"
+        ]
 
         port_map {
           api = 8000
@@ -125,6 +144,10 @@ job "getlock" {
 
   group "docs" {
     count = 2
+
+    update {
+      max_parallel = 1
+    }
 
     task "nginx" {
       driver = "docker"
