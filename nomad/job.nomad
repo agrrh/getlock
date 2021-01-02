@@ -38,7 +38,7 @@ job "getlock" {
       }
 
       resources {
-        cpu    = 128
+        cpu    = 200
         memory = 256
         network {
           mbits = 10
@@ -49,7 +49,7 @@ job "getlock" {
   }
 
   group "api" {
-    count = 2
+    count = 3
 
     update {
       max_parallel = 1
@@ -127,8 +127,8 @@ EOF
       }
 
       resources {
-        cpu    = 128
-        memory = 128
+        cpu    = 100
+        memory = 64
         network {
           mbits = 10
           port "api" {}
@@ -189,8 +189,8 @@ EOF
       }
 
       resources {
-        cpu    = 128
-        memory = 128
+        cpu    = 100
+        memory = 32
         network {
           mbits = 10
           port "http" {}
