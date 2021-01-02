@@ -28,5 +28,5 @@ class RedisStorage(object):
         return self.conn.keys()
 
     def ttl(self, key, time: int):
-        self.conn.expire(key, time)
+        self.conn.expire(key, time)  # FIXME Not a valid way to get listing
         return True
