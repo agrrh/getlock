@@ -3,3 +3,4 @@ python-box==5.2.0
 flask==1.1.2
 flask-restful==0.3.8
 redis==3.5.3
+namesgenerator==0.3
