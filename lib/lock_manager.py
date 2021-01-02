@@ -13,33 +13,45 @@ class LockManager(Resource):
         "ttl", type=float, default=60.0, help="Time for lock to live without refreshes"
     )
 
+    def __init__(self, storage=None):
+        self.storage = storage
+
     # FIXME Steal prevention, some kind of owner token?
     def put(self, lock_id):
+        lock_id = str(lock_id)
+
         args = self.parser.parse_args(strict=True)
 
-        lock = Lock(str(lock_id), **args)
+        lock_data = self.storage.read(lock_id)
 
-        if lock.id not in locks:
-            locks[lock.id] = lock
+        if not lock_data:
+            lock = Lock(lock_id, **args)
+            self.storage.create(lock.id, lock.__dict__)
             return {
                 "locked": True,
                 "message": "lock acquired",
                 "lock": lock.__dict__,
             }, 201
 
-        lock = locks.get(lock.id)
-        locks[lock.id].refresh()
+        lock = Lock(**lock_data)
+
+        lock.refresh()
+        self.storage.update(lock_id, lock.__dict__)
 
         return {"locked": True, "message": "lock refreshed", "lock": lock.__dict__}, 200
 
     def get(self, lock_id):
-        lock = locks.get(str(lock_id), None)
+        lock_id = str(lock_id)
 
-        if not lock:
+        lock_data = self.storage.read(lock_id)
+
+        if not lock_data:
             return {"locked": False, "message": "lock not found or expired"}, 404
 
+        lock = Lock(**lock_data)
+
         if not lock.is_active():
-            del locks[lock.id]
+            self.storage.delete(lock.id)
             return {
                 "locked": False,
                 "message": "lock has expired",
@@ -50,12 +62,17 @@ class LockManager(Resource):
 
     # FIXME Add some security, like check for owner token?
     def delete(self, lock_id):
-        lock = locks.get(str(lock_id), None)
+        lock_id = str(lock_id)
 
-        if not lock:
+        lock_data = self.storage.read(lock_id)
+
+        if not lock_data:
             return {"locked": False, "message": "lock not found or expired"}, 404
 
-        del locks[lock.id]
+        lock = Lock(**lock_data)
+
+        self.storage.delete(lock_id)
+
         return {
             "locked": False,
             "message": "lock has been removed",

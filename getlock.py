@@ -6,7 +6,7 @@ from box import Box
 from flask import Flask
 from flask_restful import Api
 
-import redis
+from lib.storage import RedisStorage
 
 from lib.health import Health
 from lib.lock_manager import LockManager
@@ -20,12 +20,13 @@ config = Box.from_yaml(
 app = Flask(__name__)
 api = Api(app)
 
-conn = redis.Redis(**config.redis)
+storage = RedisStorage(**config.redis)
 
 
+# TODO Add namespaces
 # TODO Consider separate create/refresh paths
 api.add_resource(Health, "/health")
-api.add_resource(LockManager, "/<uuid:lock_id>")
+api.add_resource(LockManager, "/<uuid:lock_id>", resource_class_kwargs={"storage": storage})
 api.add_resource(LockCatalog, "/locks")
 
 # TODO Add metrics

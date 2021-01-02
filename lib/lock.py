@@ -7,22 +7,15 @@ import time
 class Lock(object):
     # TODO Consider adding time left property
     # TODO Use integers for timings since we're not operationg fractions smaller than a second
-    def __init__(self, id: str, ttl: float = 60.0):
+    def __init__(self, id: str = None, ttl: float = 60.0, **kwargs):
         self.id = id
-        self.timestamp = time.time()
+        self.timestamp = kwargs.get("timestamp") or time.time()
         self.ttl = ttl
-        self.expires = self.timestamp + self.ttl
-        # REVIEW Why actually?
-        self.refreshed = []
+        self.expires = kwargs.get("expires") or (self.timestamp + self.ttl)
 
     # FIXME Should be a roperty
     def is_active(self):
         return self.expires > time.time()
 
     def refresh(self):
-        self.refreshed.append(time.time())
-
-        if len(self.refreshed) > 10:
-            self.refreshed = self.refreshed[:10]
-
         self.expires = time.time() + self.ttl
