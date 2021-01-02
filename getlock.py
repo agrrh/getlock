@@ -38,7 +38,7 @@ storage = RedisStorage(**config.redis)
 
 # TODO Add namespaces
 # TODO Consider separate create/refresh paths
-api.add_resource(Health, "/health")
+api.add_resource(Health, "/health", resource_class_kwargs={"id": name, "storage": storage})
 api.add_resource(LockManager, "/<uuid:lock_id>", resource_class_kwargs={"storage": storage})
 api.add_resource(LockCatalog, "/locks", resource_class_kwargs={"storage": storage})
 
