@@ -75,6 +75,12 @@ EOF
       max_parallel = 1
     }
 
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 200
+    }
+
     task "getlock" {
       driver = "docker"
 
@@ -157,7 +163,7 @@ EOF
 
       logs {
         max_files     = 2
-        max_file_size = 100
+        max_file_size = 50
       }
     }
   }
@@ -167,6 +173,12 @@ EOF
 
     update {
       max_parallel = 1
+    }
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 100
     }
 
     task "nginx" {
@@ -219,7 +231,7 @@ EOF
 
       logs {
         max_files     = 2
-        max_file_size = 100
+        max_file_size = 10
       }
     }
   }
