@@ -27,7 +27,7 @@ storage = RedisStorage(**config.redis)
 # TODO Consider separate create/refresh paths
 api.add_resource(Health, "/health")
 api.add_resource(LockManager, "/<uuid:lock_id>", resource_class_kwargs={"storage": storage})
-api.add_resource(LockCatalog, "/locks")
+api.add_resource(LockCatalog, "/locks", resource_class_kwargs={"storage": storage})
 
 # TODO Add metrics
 

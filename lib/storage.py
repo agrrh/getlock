@@ -23,3 +23,6 @@ class RedisStorage(object):
     def delete(self, key: str):
         self.conn.delete(key)
         return True
+
+    def list(self):
+        return self.conn.keys()
