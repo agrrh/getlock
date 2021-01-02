@@ -26,3 +26,7 @@ class RedisStorage(object):
 
     def list(self):
         return self.conn.keys()
+
+    def ttl(self, key, time: int):
+        self.conn.expire(key, time)
+        return True

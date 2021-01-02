@@ -27,6 +27,7 @@ class LockManager(Resource):
         if not lock_data:
             lock = Lock(lock_id, **args)
             self.storage.create(lock.id, lock.__dict__)
+            self.storage.ttl(lock.id, int(lock.ttl))
             return {
                 "locked": True,
                 "message": "lock acquired",
@@ -37,6 +38,7 @@ class LockManager(Resource):
 
         lock.refresh()
         self.storage.update(lock_id, lock.__dict__)
+        self.storage.ttl(lock.id, int(lock.ttl))
 
         return {"locked": True, "message": "lock refreshed", "lock": lock.__dict__}, 200
 
