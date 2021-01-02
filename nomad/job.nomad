@@ -15,9 +15,29 @@ job "getlock" {
     task "redis" {
       driver = "docker"
 
+      template {
+        data = <<EOF
+appendonly yes
+
+# NOTE Consider using "save 10x x" formula as each /health call leads to write-read-delete operations
+save 30 6
+EOF
+
+        destination   = "local/redis.conf"
+      }
+
       config {
         force_pull = true
         image = "redis:5.0.10"
+
+        volumes = [
+          "local/redis.conf:/usr/local/etc/redis/redis.conf"
+        ]
+
+        command = "redis-server"
+        args = [
+          "/usr/local/etc/redis/redis.conf"
+        ]
 
         port_map {
           redis = 6379
