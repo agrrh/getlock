@@ -154,7 +154,7 @@ EOF
 
       config {
         force_pull = true
-        image = "agrrh/getlock-docs:v0.1.0"
+        image = "agrrh/getlock-docs:v0.2.0"
 
         port_map {
           http = 80
