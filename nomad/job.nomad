@@ -39,9 +39,7 @@ EOF
           "/usr/local/etc/redis/redis.conf"
         ]
 
-        port_map {
-          redis = 6379
-        }
+        ports = ["redis"]
       }
 
       service {
@@ -60,11 +58,11 @@ EOF
       resources {
         cpu    = 200
         memory = 256
-        network {
-          mbits = 10
-          port "redis" {}
-        }
       }
+    }
+
+    network {
+      port "redis" { to = 6379 }
     }
   }
 
@@ -122,9 +120,7 @@ EOF
           "local/config.yml:/app/config.yml"
         ]
 
-        port_map {
-          api = 8000
-        }
+        ports = ["api"]
       }
 
       service {
@@ -159,16 +155,16 @@ EOF
       resources {
         cpu    = 100
         memory = 64
-        network {
-          mbits = 10
-          port "api" {}
-        }
       }
 
       logs {
         max_files     = 2
         max_file_size = 50
       }
+    }
+
+    network {
+      port "api" { to = 8000 }
     }
   }
 
@@ -196,9 +192,7 @@ EOF
         force_pull = true
         image = "agrrh/getlock-docs:v0.2.0"
 
-        port_map {
-          http = 80
-        }
+        ports = ["http"]
       }
 
       service {
@@ -231,16 +225,16 @@ EOF
       resources {
         cpu    = 100
         memory = 32
-        network {
-          mbits = 10
-          port "http" {}
-        }
       }
 
       logs {
         max_files     = 2
         max_file_size = 10
       }
+    }
+
+    network {
+      port "http" { to = 80 }
     }
   }
 }
