@@ -71,6 +71,10 @@ EOF
   group "api" {
     count = 3
 
+    spread {
+      attribute = "${node.unique.name}"
+    }
+
     update {
       max_parallel = 1
     }
@@ -170,6 +174,10 @@ EOF
 
   group "docs" {
     count = 2
+
+    spread {
+      attribute = "${node.unique.name}"
+    }
 
     update {
       max_parallel = 1
