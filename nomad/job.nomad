@@ -3,31 +3,124 @@ job "getlock" {
 
   priority = 80
 
-  constraint {
-    distinct_hosts = "true"
-  }
+  group "storage" {
+    count = 1
 
-  update {
-    max_parallel = 1
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 300
+    }
+
+    task "redis" {
+      driver = "docker"
+
+      template {
+        data = <<EOF
+appendonly yes
+
+# NOTE Consider using "save 10x x" formula as each /health call leads to write-read-delete operations
+save 30 6
+EOF
+
+        destination   = "local/redis.conf"
+      }
+
+      config {
+        force_pull = true
+        image = "redis:5.0.10"
+
+        volumes = [
+          "local/redis.conf:/usr/local/etc/redis/redis.conf"
+        ]
+
+        command = "redis-server"
+        args = [
+          "/usr/local/etc/redis/redis.conf"
+        ]
+
+        ports = ["redis"]
+      }
+
+      service {
+        name = "getlock-storage-redis"
+
+        check {
+          type     = "tcp"
+          port     = "redis"
+          interval = "10s"
+          timeout  = "2s"
+        }
+
+        port = "redis"
+      }
+
+      resources {
+        cpu    = 200
+        memory = 256
+      }
+    }
+
+    network {
+      port "redis" { to = 6379 }
+    }
   }
 
   group "api" {
-    count = 1
+    count = 3
+
+    spread {
+      attribute = "${node.unique.name}"
+    }
+
+    update {
+      max_parallel = 1
+    }
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 200
+    }
 
     task "getlock" {
       driver = "docker"
 
       env {
-        CONFIG_PATH = "./config.example.yml"
+        CONFIG_PATH = "./config.yml"
+      }
+
+      template {
+        data = <<EOF
+---
+
+flask:
+  debug: false
+  threaded: true
+  host: 0.0.0.0
+  port: 8000
+
+{{ range service "getlock-storage-redis" }}
+redis:
+  host: {{ .Address }}
+  port: {{ .Port }}
+  db: 0
+  password: null
+{{ end }}
+EOF
+
+        destination   = "local/config.yml"
       }
 
       config {
         force_pull = true
-        image = "agrrh/getlock:v0.1.0"
+        image = "agrrh/getlock:v0.2.0"
 
-        port_map {
-          api = 8000
-        }
+        volumes = [
+          "local/config.yml:/app/config.yml"
+        ]
+
+        ports = ["api"]
       }
 
       service {
@@ -60,34 +153,46 @@ job "getlock" {
       }
 
       resources {
-        cpu    = 128
-        memory = 128
-        network {
-          mbits = 10
-          port "api" {}
-        }
+        cpu    = 100
+        memory = 64
       }
 
       logs {
         max_files     = 2
-        max_file_size = 100
+        max_file_size = 50
       }
+    }
+
+    network {
+      port "api" { to = 8000 }
     }
   }
 
   group "docs" {
     count = 2
 
+    spread {
+      attribute = "${node.unique.name}"
+    }
+
+    update {
+      max_parallel = 1
+    }
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 100
+    }
+
     task "nginx" {
       driver = "docker"
 
       config {
         force_pull = true
-        image = "agrrh/getlock-docs:v0.1.0"
+        image = "agrrh/getlock-docs:v0.2.0"
 
-        port_map {
-          http = 80
-        }
+        ports = ["http"]
       }
 
       service {
@@ -118,18 +223,18 @@ job "getlock" {
       }
 
       resources {
-        cpu    = 128
-        memory = 128
-        network {
-          mbits = 10
-          port "http" {}
-        }
+        cpu    = 100
+        memory = 32
       }
 
       logs {
         max_files     = 2
-        max_file_size = 100
+        max_file_size = 10
       }
+    }
+
+    network {
+      port "http" { to = 80 }
     }
   }
 }

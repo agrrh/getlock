@@ -24,7 +24,7 @@ export default {
   name: 'Main',
   methods: {
     fetchData() {
-      Axios.get('/locks/')
+      Axios.get('https://getlock.tech/locks/')
       .then(response => {
         console.log(response)
       })
