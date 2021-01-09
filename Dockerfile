@@ -12,5 +12,4 @@ COPY ./getlock.py ./
 ENV PYTHONDONTWRITEBYTECODE yes
 ENV PYTHONUNBUFFERED yes
 
-ENTRYPOINT ["/usr/local/bin/python3"]
-CMD ["getlock.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--threads", "4", "--max-requests", "1000", "getlock:app"]
