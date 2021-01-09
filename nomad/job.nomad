@@ -86,7 +86,10 @@ EOF
     task "getlock" {
       driver = "docker"
 
+      leader = true
+
       env {
+        MANUAL_DEPLOY_COUNTER = "1"
         CONFIG_PATH = "./config.yml"
       }
 
@@ -122,6 +125,8 @@ EOF
 
         ports = ["api"]
       }
+
+      kill_signal = "SIGTERM"
 
       service {
         check {
