@@ -7,6 +7,7 @@ from box import Box
 
 from flask import Flask, make_response
 from flask_restful import Api
+from flask_cors import CORS
 
 from lib.storage import RedisStorage
 
@@ -23,6 +24,13 @@ config = Box.from_yaml(
 
 app = Flask(__name__)
 api = Api(app)
+
+cors_resources = {
+    r"/*": {
+        "origins": "*"
+    }
+}
+cors = CORS(app, resources=cors_resources)
 
 
 @api.representation('application/json')
