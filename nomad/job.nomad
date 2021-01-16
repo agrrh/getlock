@@ -117,7 +117,7 @@ EOF
 
       config {
         force_pull = true
-        image = "agrrh/getlock:v0.2.0"
+        image = "agrrh/getlock:v0.3.0"
 
         volumes = [
           "local/config.yml:/app/config.yml"
@@ -195,7 +195,7 @@ EOF
 
       config {
         force_pull = true
-        image = "agrrh/getlock-docs:v0.2.0"
+        image = "agrrh/getlock-docs:v0.3.0"
 
         ports = ["http"]
       }
