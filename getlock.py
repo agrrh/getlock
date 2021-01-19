@@ -37,7 +37,10 @@ cors = CORS(app, resources=cors_resources)
 def output_json(data, code, headers=None):
     resp = make_response(json.dumps(data), code)
     resp.headers.extend(headers or {})
-    resp.headers.extend({"X-GetLock-Server-ID": f"{name}"})
+    resp.headers.extend({
+        "X-GetLock-Server-ID": f"{name}",
+        "X-GetLock-API-Version": "1.x.x",
+    })
     return resp
 
 
