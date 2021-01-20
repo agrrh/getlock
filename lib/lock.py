@@ -1,21 +1,38 @@
 import time
+import uuid
+
+from datetime import datetime
+
+from lib.storage_object import StorageObject
 
 
-# IDEA Think of some human-friendly format, like docker names-generator
-#   https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go
-# IDEA Is it possible to use some inline docs + mkdocs?
-class Lock(object):
-    # TODO Consider adding time left property
-    # TODO Use integers for timings since we're not operationg fractions smaller than a second
-    def __init__(self, id: str = None, ttl: float = 60.0, **kwargs):
+class Lock(StorageObject):
+    STORAGE_PREFIX = "lock"
+
+    PROPERTIES_IGNORE_DUMP = ("namespace",)
+
+    # Some random UUID to make lock UUIDs persistent
+    ROOT_UUID = uuid.UUID("0bbbf540-1e6d-47f9-ab52-0d3d6c814018")
+
+    def __init__(self, storage, id, namespace, **kwargs):
         self.id = id
-        self.timestamp = kwargs.get("timestamp") or time.time()
-        self.ttl = ttl
-        self.expires = kwargs.get("expires") or (self.timestamp + self.ttl)
+        self.uuid = str(
+            uuid.uuid5(
+                self.ROOT_UUID,
+                "-".join((namespace.id, id))
+            )
+        )
 
-    # FIXME Should be a roperty
-    def is_active(self):
-        return self.expires > time.time()
+        super(Lock, self).__init__(storage=storage, id=self.uuid)
 
-    def refresh(self):
-        self.expires = time.time() + self.ttl
+        self.ttl = kwargs.get("ttl", 60)
+        self.timestamp = kwargs.get("timestamp", int(time.time()))
+
+    # FIXME
+    # @property
+    # def expires(self):
+    #     return datetime.fromtimestamp(self.timestamp + self.ttl)
+
+    def _write(self):
+        self._storage.create(self._storage_id, self._dump())
+        self._storage.ttl(self._storage_id, self.ttl)
