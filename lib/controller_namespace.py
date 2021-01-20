@@ -47,7 +47,9 @@ class NamespaceController(Resource):
         if not namespace.read():
             return {"message": "Namespace not found"}, 404
 
-        return {"namespace": namespace.read()}, 200
+        namespace._load_self()
+
+        return {"namespace": namespace._dump()}, 200
 
     def delete(self, namespace_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)
