@@ -6,12 +6,12 @@ from lib.objects.namespace import Namespace
 
 
 class NamespaceController(Resource):
-    def __init__(self, storage):
-        self.storage = storage
-
     # TODO Validate ID here and for other methods
     # TODO Check access as separate method or decorator
     #   https://flask-restful.readthedocs.io/en/latest/extending.html#resource-method-decorators
+
+    def __init__(self, storage):
+        self.storage = storage
 
     def put(self, namespace_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)

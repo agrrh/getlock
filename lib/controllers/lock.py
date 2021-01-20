@@ -5,6 +5,10 @@ from lib.objects.lock import Lock
 
 
 class LockController(Resource):
+    # TODO Validate ID here and for other methods
+    # TODO Check access as separate method or decorator
+    #   https://flask-restful.readthedocs.io/en/latest/extending.html#resource-method-decorators
+
     parser = reqparse.RequestParser()
     parser.add_argument(
         "ttl", type=int, default=60, help="Time for lock to live without refreshes"
