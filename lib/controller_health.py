@@ -1,9 +1,6 @@
-import time
-
 from flask_restful import Resource
 
 
-# TODO Move storage check to storage internal method
 class HealthController(Resource):
     def __init__(self, id='changeme', storage=None):
         self.id = id
@@ -11,17 +8,16 @@ class HealthController(Resource):
 
     def get(self):
         try:
-            self.storage.update(f"health-{self.id}", time.time())
-            time_write = self.storage.read(f"health-{self.id}")
-            time_avg = (time.time() - time_write) / 2.0
-            assert time_avg > 0
-            self.storage.delete(f"health-{self.id}")
+            time_avg = self.storage.health(key=f"health-{self.id}")
         except Exception:
-            return {
-                "message": "failed"
-            }, 500
+            time_avg = 0
+            message = "Health check failed"
+            code = 500
+        else:
+            message = "OK"
+            code = 200
 
         return {
-            "message": "okay",
+            "message": message,
             "storage_response": f"{time_avg}"
-        }, 200
+        }, code

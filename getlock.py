@@ -11,7 +11,7 @@ from flask_cors import CORS
 
 from lib.storage import RedisStorage
 
-from lib.controller_health import Health
+from lib.controller_health import HealthController
 from lib.controller_namespace import NamespaceController
 from lib.controller_lock import LockController
 
