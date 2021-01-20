@@ -11,9 +11,9 @@ from flask_cors import CORS
 
 from lib.storage import RedisStorage
 
-from lib.health import Health
-from lib.namespace_controller import NamespaceController
-from lib.lock_controller import LockController
+from lib.controller_health import Health
+from lib.controller_namespace import NamespaceController
+from lib.controller_lock import LockController
 
 name = namesgenerator.get_random_name().replace("_", "-")
 
@@ -48,7 +48,7 @@ storage = RedisStorage(**config.redis)
 # TODO Add namespaces
 # TODO Consider separate create/refresh paths
 api.add_resource(
-    Health, "/health", resource_class_kwargs={"id": name, "storage": storage}
+    HealthController, "/health", resource_class_kwargs={"id": name, "storage": storage}
 )
 
 api.add_resource(

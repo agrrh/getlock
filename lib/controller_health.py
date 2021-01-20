@@ -4,7 +4,7 @@ from flask_restful import Resource
 
 
 # TODO Move storage check to storage internal method
-class Health(Resource):
+class HealthController(Resource):
     def __init__(self, id='changeme', storage=None):
         self.id = id
         self.storage = storage
