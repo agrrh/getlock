@@ -48,6 +48,7 @@ class NamespaceController(Resource):
             return {"message": "Namespace not found"}, 404
 
         namespace._load_self()
+        namespace._locks_refresh()
 
         return {"namespace": namespace._dump()}, 200
 

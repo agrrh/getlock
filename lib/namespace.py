@@ -1,5 +1,7 @@
 from lib.storage_object import StorageObject
 
+from lib.lock import Lock
+
 
 class Namespace(StorageObject):
     STORAGE_PREFIX = "namespace"
@@ -11,3 +13,12 @@ class Namespace(StorageObject):
         self.id = id
         self.token = id  # FIXME For now it's just namespace name. Later we should use some hash or JWT?
         self.locks = []
+
+    def _locks_refresh(self):
+        self.locks = [
+            lock_id
+            for lock_id
+            in self.locks
+            if Lock(storage=self._storage, namespace=self, id=lock_id).read()
+        ]
+        self.locks = list(set(self.locks))
