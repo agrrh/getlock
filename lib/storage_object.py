@@ -16,7 +16,7 @@ class StorageObject(object):
             k: v
             for k, v
             in self.__dict__.items()
-            if k not in self.PROPERTIES_IGNORE_DUMP and not k.startswith("_")
+            if k not in self.PROPERTIES_IGNORE_DUMP and k not in ("_storage", "_storage_id",)
         }
 
     def _load(self, **kwargs):
@@ -24,7 +24,7 @@ class StorageObject(object):
             setattr(self, k, v)
             for k, v
             in kwargs.items()
-            if k not in self.PROPERTIES_IGNORE_LOAD and not k.startswith("_")
+            if k not in self.PROPERTIES_IGNORE_LOAD and k not in ("_storage", "_storage_id",)
         ]
 
     def _load_self(self):
