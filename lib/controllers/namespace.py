@@ -47,6 +47,11 @@ class NamespaceController(Resource):
         if not namespace.read():
             return {"message": "Namespace not found"}, 404
 
+        token = request.headers.get("X-Getlock-Auth")
+
+        if token != namespace.token:
+            return {"message": "Provided wrong auth token"}, 403
+
         namespace._load_self()
         namespace._locks_refresh()
 
