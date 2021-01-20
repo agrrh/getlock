@@ -40,6 +40,8 @@ class LockController(Resource):
         if not lock.read():
             return {"message": "Lock not found", "lock": None}, 404
 
+        lock._load_self()
+
         return {"message": "Lock found", "lock": lock._dump()}, 200
 
     def delete(self, namespace_id: str, lock_id: str):
