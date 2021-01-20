@@ -1,7 +1,7 @@
 import time
 import uuid
 
-from datetime import datetime
+import datetime
 
 from lib.storage_object import StorageObject
 
@@ -28,10 +28,21 @@ class Lock(StorageObject):
         self.ttl = kwargs.get("ttl", 60)
         self.timestamp = kwargs.get("timestamp", int(time.time()))
 
-    # FIXME
-    # @property
-    # def expires(self):
-    #     return datetime.fromtimestamp(self.timestamp + self.ttl)
+        self.expires_timestamp = self._expires_timestamp
+        self.expires_human = self._expires_human
+        self.seconds_left = self._seconds_left
+
+    @property
+    def _expires_timestamp(self):
+        return self.timestamp + self.ttl
+
+    @property
+    def _expires_human(self):
+        return datetime.datetime.fromtimestamp(self.timestamp + self.ttl).strftime("%c")
+
+    @property
+    def _seconds_left(self):
+        return int(time.time()) - self.timestamp + self.ttl
 
     def _write(self):
         self._storage.create(self._storage_id, self._dump())
