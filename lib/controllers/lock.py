@@ -1,10 +1,15 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse, request
 
 from lib.objects.namespace import Namespace
 from lib.objects.lock import Lock
 
 
 class LockController(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument(
+        "ttl", type=int, default=60, help="Time for lock to live without refreshes"
+    )
+
     def __init__(self, storage):
         self.storage = storage
 
@@ -14,10 +19,14 @@ class LockController(Resource):
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
 
-        lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
+        token = request.headers.get("X-Getlock-Auth")
 
-        # TODO Check auth
-        # TODO Use data sent
+        if token != namespace.token:
+            return {"message": "Provided wrong auth token"}, 403
+
+        args = self.parser.parse_args(strict=True)
+
+        lock = Lock(storage=self.storage, id=lock_id, namespace=namespace, **args)
 
         if not lock.read():
             lock.create()
@@ -32,8 +41,6 @@ class LockController(Resource):
 
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
-
-        # TODO Check auth
 
         lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
 
@@ -50,7 +57,10 @@ class LockController(Resource):
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
 
-        # TODO Check auth
+        token = request.headers.get("X-Getlock-Auth")
+
+        if token != namespace.token:
+            return {"message": "Provided wrong auth token"}, 403
 
         lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
 
