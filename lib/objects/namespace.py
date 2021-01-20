@@ -1,9 +1,8 @@
-from lib.storage_object import StorageObject
+from lib.objects.generic import GenericObject
+from lib.objects.lock import Lock
 
-from lib.lock import Lock
 
-
-class Namespace(StorageObject):
+class Namespace(GenericObject):
     STORAGE_PREFIX = "namespace"
     PROPERTIES_IGNORE_DUMP = ("token",)
 

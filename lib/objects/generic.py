@@ -1,4 +1,4 @@
-class StorageObject(object):
+class GenericObject(object):
     STORAGE_PREFIX = "object"
 
     PROPERTIES_IGNORE_DUMP = ()

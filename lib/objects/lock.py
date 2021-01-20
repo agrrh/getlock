@@ -1,10 +1,10 @@
 import time
 import uuid
 
-from lib.storage_object import StorageObject
+from lib.objects.generic import GenericObject
 
 
-class Lock(StorageObject):
+class Lock(GenericObject):
     STORAGE_PREFIX = "lock"
 
     PROPERTIES_IGNORE_DUMP = ("namespace",)

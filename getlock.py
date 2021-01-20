@@ -11,9 +11,9 @@ from flask_cors import CORS
 
 from lib.storage import RedisStorage
 
-from lib.controller_health import HealthController
-from lib.controller_namespace import NamespaceController
-from lib.controller_lock import LockController
+from lib.controllers.health import HealthController
+from lib.controllers.namespace import NamespaceController
+from lib.controllers.lock import LockController
 
 name = namesgenerator.get_random_name().replace("_", "-")
 

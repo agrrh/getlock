@@ -2,7 +2,7 @@ import logging
 
 from flask_restful import Resource, request
 
-from lib.namespace import Namespace
+from lib.objects.namespace import Namespace
 
 
 class NamespaceController(Resource):

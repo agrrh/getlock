@@ -1,7 +1,7 @@
 from flask_restful import Resource
 
-from lib.namespace import Namespace
-from lib.lock import Lock
+from lib.objects.namespace import Namespace
+from lib.objects.lock import Lock
 
 
 class LockController(Resource):
