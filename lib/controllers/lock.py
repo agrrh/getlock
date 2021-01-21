@@ -30,15 +30,21 @@ class LockController(Resource):
 
         args = self.parser.parse_args(strict=True)
 
-        lock = Lock(storage=self.storage, id=lock_id, namespace=namespace, **args)
+        lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
 
         if not lock.read():
+            message = "Lock created"
+
+            lock._load(**args)
             lock.create()
-            return {"message": "Lock created", "lock": lock._dump()}, 201
+        else:
+            message = "Lock updated"
 
-        lock.update()
+            lock._load_self()
+            lock._load(**args)
+            lock.update()
 
-        return {"message": "Lock updated", "lock": lock._dump()}, 201
+        return {"message": message, "lock": lock._dump()}, 201
 
     def get(self, namespace_id: str, lock_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)
