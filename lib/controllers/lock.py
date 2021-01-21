@@ -5,7 +5,6 @@ from lib.objects.lock import Lock
 
 
 class LockController(Resource):
-    # TODO Validate ID here and for other methods
     # TODO Check access as separate method or decorator
     #   https://flask-restful.readthedocs.io/en/latest/extending.html#resource-method-decorators
 
@@ -20,6 +19,9 @@ class LockController(Resource):
     def put(self, namespace_id: str, lock_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)
 
+        if not namespace.validate_id():
+            return {"message": "Wrong namespace"}, 400
+
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
 
@@ -31,6 +33,9 @@ class LockController(Resource):
         args = self.parser.parse_args(strict=True)
 
         lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
+
+        if not lock.validate_id():
+            return {"message": "Wrong lock", "lock": None}, 400
 
         if not lock.read():
             message = "Lock created"
@@ -49,10 +54,16 @@ class LockController(Resource):
     def get(self, namespace_id: str, lock_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)
 
+        if not namespace.validate_id():
+            return {"message": "Wrong namespace"}, 400
+
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
 
         lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
+
+        if not lock.validate_id():
+            return {"message": "Wrong lock", "lock": None}, 400
 
         if not lock.read():
             return {"message": "Lock not found", "lock": None}, 404
@@ -64,6 +75,9 @@ class LockController(Resource):
     def delete(self, namespace_id: str, lock_id: str):
         namespace = Namespace(storage=self.storage, id=namespace_id)
 
+        if not namespace.validate_id():
+            return {"message": "Wrong namespace"}, 400
+
         if not namespace.read():
             return {"message": "Namespace not found", "lock": None}, 404
 
@@ -73,6 +87,9 @@ class LockController(Resource):
             return {"message": "Provided wrong auth token"}, 403
 
         lock = Lock(storage=self.storage, id=lock_id, namespace=namespace)
+
+        if not lock.validate_id():
+            return {"message": "Wrong lock", "lock": None}, 400
 
         if not lock.read():
             return {"message": "Lock not found", "lock": None}, 404

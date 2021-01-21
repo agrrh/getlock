@@ -1,5 +1,6 @@
 import time
 import uuid
+import re
 
 from lib.objects.generic import GenericObject
 
@@ -35,3 +36,6 @@ class Lock(GenericObject):
 
         self._storage.create(self._storage_id, self._dump())
         self._storage.ttl(self._storage_id, self.ttl)
+
+    def validate_id(self):
+        return bool(re.match(r'^[a-z0-9][0-9a-z-]{2,46}[0-9a-z]$', self.id))

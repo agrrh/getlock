@@ -1,3 +1,5 @@
+import re
+
 from lib.objects.generic import GenericObject
 from lib.objects.lock import Lock
 
@@ -21,3 +23,6 @@ class Namespace(GenericObject):
             if Lock(storage=self._storage, namespace=self, id=lock_id).read()
         ]
         self.locks = list(set(self.locks))
+
+    def validate_id(self):
+        return bool(re.match(r'^[a-z0-9][0-9a-z-]{2,30}[0-9a-z]$', self.id))
