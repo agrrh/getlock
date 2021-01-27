@@ -31,7 +31,12 @@ class Lock(GenericObject):
 
     def _write(self):
         self.namespace._load_self()
-        self.namespace.locks.append(self.id)
+
+        # Replace old occurency with new one
+        if self.id in [lock.get("id") for lock in self.namespace.locks]:
+            self.namespace.locks = list(filter(lambda i: i.get("id") != self.id, self.namespace.locks))
+        self.namespace.locks.append(self._dump())
+
         self.namespace.update()
 
         self._storage.create(self._storage_id, self._dump())

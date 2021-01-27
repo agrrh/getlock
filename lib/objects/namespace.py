@@ -17,12 +17,11 @@ class Namespace(GenericObject):
 
     def _locks_refresh(self):
         self.locks = [
-            lock_id
-            for lock_id
+            Lock(storage=self._storage, namespace=self, id=lock.get("id")).read()
+            for lock
             in self.locks
-            if Lock(storage=self._storage, namespace=self, id=lock_id).read()
+            if Lock(storage=self._storage, namespace=self, id=lock.get("id")).read()
         ]
-        self.locks = list(set(self.locks))
 
     def validate_id(self):
         return bool(re.match(r'^[a-z0-9][0-9a-z-]{2,30}[0-9a-z]$', self.id))
