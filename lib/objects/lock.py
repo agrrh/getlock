@@ -42,5 +42,15 @@ class Lock(GenericObject):
         self._storage.create(self._storage_id, self._dump())
         self._storage.ttl(self._storage_id, self.ttl)
 
+    # FIXME Rework this dirty hack
+    #   We need always dump current Lock age, not from DB, but current one
+    def read(self):
+        data = self._storage.read(self._storage_id)
+
+        if data:
+            data.update({"age": int(time.time()) - data.get("timestamp")})
+
+        return data
+
     def validate_id(self):
         return bool(re.match(r'^[a-z0-9][0-9a-z-]{2,46}[0-9a-z]$', self.id))
