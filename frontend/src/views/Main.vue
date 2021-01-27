@@ -1,37 +1,33 @@
 <template>
-<v-main>
+  <v-main>
     <v-container>
-      <v-alert
-        type="info"
-        dense
-        text
-      >
-        Main component
-      </v-alert>
-      <v-btn
-        @click="fetchData"
-      >
-        fetch
-      </v-btn>
+      <v-row>
+        <WelcomeAlert/>
+      </v-row>
+      <v-row>
+        <Session v-if="$store.state.locks.length !== 0" />
+      </v-row>
     </v-container>
   </v-main>
 </template>
 
 <script>
-import Axios from 'axios';
+import Session from '../components/Session';
+import WelcomeAlert from '../components/WelcomeAlert';
 
 export default {
   name: 'Main',
+  components: {
+    Session,
+    WelcomeAlert,
+  },
   methods: {
     fetchData() {
-      Axios.get('https://getlock.tech/v1/locks')
-      .then(response => {
-        console.log(response)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      this.$store.dispatch('fetchData');
     }
+  },
+  mounted() {
+    this.fetchData();
   }
 }
 </script>
