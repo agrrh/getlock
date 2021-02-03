@@ -5,7 +5,13 @@
         <WelcomeAlert/>
       </v-row>
       <v-row>
-        <Session v-if="$store.state.locks.length !== 0" />
+        <v-col v-if="$store.state.locks.length !== 0">
+          <Session 
+            v-for="lock in $store.state.locks" 
+            :key="lock.uuid"
+            :lock="lock"
+          />
+        </v-col>
       </v-row>
     </v-container>
   </v-main>

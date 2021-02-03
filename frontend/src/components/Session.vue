@@ -2,21 +2,27 @@
   <v-col>
     <v-slide-x-transition 
       appear 
-      mode="out-in" 
-      v-for="lock in $store.state.locks" 
-      :key="lock.uuid"
+      mode="out-in"
     >
-      <v-card class="mb-4 py-4 px-6">
-        <span class="font-weight-bold">
-          Session:
-        </span> 
-        {{ lock }}
+      <v-card class="py-4 px-6">
+        <div>
+          <span class="font-weight-bold">
+            Session name:
+          </span> 
+          {{ name }}
+        </div>
+        <div>
+          <span class="font-weight-bold">
+            Session ID:
+          </span> 
+          {{ uuid }}
+        </div>
         <p style="color: #009688" class="font-weight-bold mb-3">
-          In progress
+          {{ status.message }}
         </p>
         <v-progress-linear
           color="#3f51b5"
-          buffer-value="0"
+          :buffer-value="progressValue"
           stream
         ></v-progress-linear>
       </v-card>
@@ -25,14 +31,54 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
+  props: {
+    lock: Object
+  },
   name: 'Session',
+  data: function() {
+    return {
+      name: this.lock.id,
+      uuid: this.lock.uuid,
+      age: this.lock.age,
+      ttl: this.lock.ttl,
+      status: {
+        message: 'In progress',
+        active: true
+      }
+    }
+  },
   computed: {
-    ...mapGetters([
-      'getLocks'
-    ])
+    timeLeft() {
+      return this.ttl - this.age
+    },
+    progressValue() {
+      return this.age / this.ttl * 100
+    }
+  },
+  methods: {
+    countDownTimer() {
+      if (this.timeLeft > 0) {
+        setTimeout(() => {
+          this.age += 1
+          this.countDownTimer()
+        }, 1000)
+      }
+    }
+  },
+  watch: {
+    progressValue: {
+      handler(val) {
+        if (val === 100) {
+          this.status.message = 'Done!';
+          this.status.active = false;
+        }
+      }
+    }
+  },
+  created() {
+    this.countDownTimer()
   }
 }
 </script>

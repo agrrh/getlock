@@ -1,7 +1,7 @@
 <template>
   <v-col class="text-center mt-12">
     <h1 style="font-size: 56px">
-      Welcome, test!
+      Welcome, user!
     </h1>
     <p class="welcome-alert-text mb-0 mt-4"> {{ quantityMessage }}</p>
     <p class="welcome-alert-text" v-if="!sessionsCount">
