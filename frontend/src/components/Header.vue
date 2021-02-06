@@ -1,7 +1,7 @@
 <template>
   <v-app-bar
       app
-      color="#607d8b"
+      color="primary"
       dark
   >
     <v-container>
@@ -20,7 +20,13 @@
         >
           <v-icon>mdi-cog</v-icon>
         </v-btn>
-        <v-icon>mdi-account-reactivate</v-icon>
+        <v-btn 
+          class="mr-4"
+          icon
+          @click="$vuetify.theme.dark = !$vuetify.theme.dark"
+        >
+          <v-icon>mdi-brightness-6</v-icon>
+        </v-btn>
       </v-row>
     </v-container>
   </v-app-bar>

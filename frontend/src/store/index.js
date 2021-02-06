@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     locks: '',
     sessionId: '',
-    devPanelVisible: false
+    devPanelVisible: false,
+    listIsLoading: false,
   },
   mutations: {
     updateLocks(state, payload) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     toggleDevPanel(state) {
       state.devPanelVisible = !state.devPanelVisible;
+    },
+    setLoading(state, payload) {
+      state.listIsLoading = payload;
     }
   },
   getters: {
@@ -35,6 +39,7 @@ export default new Vuex.Store({
   },
   actions: {
     fetchData() {
+      this.commit('setLoading', true);
       Axios.get('https://getlock.tech/v2/~test',
         {
           headers: {
@@ -45,9 +50,11 @@ export default new Vuex.Store({
       .then(response => {
         console.log(response);
         this.commit('updateLocks', response.data.namespace.locks);
+        this.commit('setLoading', false);
       })
       .catch(err => {
         console.log(err)
+        this.commit('setLoading', false);
       })
     }
   },

@@ -17,7 +17,10 @@
           </span> 
           {{ uuid }}
         </div>
-        <p style="color: #009688" class="font-weight-bold mb-3">
+        <p 
+          :style="status.active ? 'color: #607d8b' : 'color: #009688'" 
+          class="font-weight-bold mb-3"
+        >
           {{ status.message }}
         </p>
         <v-progress-linear
