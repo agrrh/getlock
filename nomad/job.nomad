@@ -66,8 +66,8 @@ EOF
     }
   }
 
-  group "api" {
-    count = 3
+  group "api-v1" {
+    count = 2
 
     spread {
       attribute = "${node.unique.name}"
@@ -89,7 +89,6 @@ EOF
       leader = true
 
       env {
-        MANUAL_DEPLOY_COUNTER = "1"
         CONFIG_PATH = "./config.yml"
       }
 
@@ -145,15 +144,121 @@ EOF
           "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
           "traefik.http.middlewares.strip-v1.stripprefix.prefixes=/v1",
           # http
-          "traefik.http.routers.http-getlock-tech-api.entrypoints=http",
-          "traefik.http.routers.http-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
-          "traefik.http.routers.http-getlock-tech-api.middlewares=redir-https,strip-v1",
+          "traefik.http.routers.http-getlock-tech-api-v1.entrypoints=http",
+          "traefik.http.routers.http-getlock-tech-api-v1.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
+          "traefik.http.routers.http-getlock-tech-api-v1.middlewares=redir-https,strip-v1",
           # https
-          "traefik.http.routers.https-getlock-tech-api.entrypoints=https",
-          "traefik.http.routers.https-getlock-tech-api.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
-          "traefik.http.routers.https-getlock-tech-api.middlewares=strip-v1",
-          "traefik.http.routers.https-getlock-tech-api.tls=true",
-          "traefik.http.routers.https-getlock-tech-api.tls.certresolver=http",
+          "traefik.http.routers.https-getlock-tech-api-v1.entrypoints=https",
+          "traefik.http.routers.https-getlock-tech-api-v1.rule=Host(\"getlock.tech\") && PathPrefix(\"/v1/\")",
+          "traefik.http.routers.https-getlock-tech-api-v1.middlewares=strip-v1",
+          "traefik.http.routers.https-getlock-tech-api-v1.tls=true",
+          "traefik.http.routers.https-getlock-tech-api-v1.tls.certresolver=http",
+        ]
+      }
+
+      resources {
+        cpu    = 100
+        memory = 64
+      }
+
+      logs {
+        max_files     = 2
+        max_file_size = 50
+      }
+    }
+
+    network {
+      port "api" { to = 8000 }
+    }
+  }
+
+  group "api-v2" {
+    count = 3
+
+    spread {
+      attribute = "${node.unique.name}"
+    }
+
+    update {
+      max_parallel = 1
+    }
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 200
+    }
+
+    task "getlock" {
+      driver = "docker"
+
+      leader = true
+
+      env {
+        CONFIG_PATH = "./config.yml"
+      }
+
+      template {
+        data = <<EOF
+---
+
+flask:
+  debug: false
+  threaded: true
+  host: 0.0.0.0
+  port: 8000
+
+{{ range service "getlock-storage-redis" }}
+redis:
+  host: {{ .Address }}
+  port: {{ .Port }}
+  db: 1
+  password: null
+{{ end }}
+EOF
+
+        destination   = "local/config.yml"
+      }
+
+      config {
+        force_pull = true
+        image = "agrrh/getlock:v1.0.1"
+
+        volumes = [
+          "local/config.yml:/app/config.yml"
+        ]
+
+        ports = ["api"]
+      }
+
+      kill_signal = "SIGTERM"
+
+      service {
+        check {
+          type     = "http"
+          port     = "api"
+          path     = "/health"
+          interval = "10s"
+          timeout  = "1s"
+        }
+
+        port = "api"
+
+        tags = [
+          "traefik.enable=true",
+          # middlewares
+          "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
+          "traefik.http.middlewares.strip-v2.stripprefix.prefixes=/v2",
+          # http
+          "traefik.http.routers.http-getlock-tech-api-v2.entrypoints=http",
+          "traefik.http.routers.http-getlock-tech-api-v2.rule=Host(\"getlock.tech\") && PathPrefix(\"/v2/\")",
+          "traefik.http.routers.http-getlock-tech-api-v2.middlewares=redir-https,strip-v2",
+          # https
+          "traefik.http.routers.https-getlock-tech-api-v2.entrypoints=https",
+          "traefik.http.routers.https-getlock-tech-api-v2.rule=Host(\"getlock.tech\") && PathPrefix(\"/v2/\")",
+          "traefik.http.routers.https-getlock-tech-api-v2.middlewares=strip-v2",
+          "traefik.http.routers.https-getlock-tech-api-v2.tls=true",
+          "traefik.http.routers.https-getlock-tech-api-v2.tls.certresolver=http",
         ]
       }
 

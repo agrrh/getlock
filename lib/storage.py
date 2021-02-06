@@ -1,10 +1,18 @@
 import redis
 import json
+import time
 
 
 class RedisStorage(object):
     def __init__(self, **kwargs):
         self.conn = redis.Redis(**kwargs)
+
+    def health(self, key: str = "health"):
+        self.update(key, time.time())
+        time_write = self.read(key)
+        self.delete(key)
+
+        return (time.time() - time_write) / 2.0
 
     def create(self, key: str, data):
         data = json.dumps(data)
