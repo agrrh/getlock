@@ -321,14 +321,14 @@ EOF
           # middlewares
           "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
           # http
-          "traefik.http.routers.http-getlock-tech-docs.entrypoints=http",
-          "traefik.http.routers.http-getlock-tech-docs.rule=Host(\"app.getlock.tech\")",
-          "traefik.http.routers.http-getlock-tech-docs.middlewares=redir-https",
+          "traefik.http.routers.http-app-getlock-tech.entrypoints=http",
+          "traefik.http.routers.http-app-getlock-tech.rule=Host(\"app.getlock.tech\")",
+          "traefik.http.routers.http-app-getlock-tech.middlewares=redir-https",
           # https
-          "traefik.http.routers.https-getlock-tech-docs.entrypoints=https",
-          "traefik.http.routers.https-getlock-tech-docs.rule=Host(\"app.getlock.tech\")",
-          "traefik.http.routers.https-getlock-tech-docs.tls=true",
-          "traefik.http.routers.https-getlock-tech-docs.tls.certresolver=http",
+          "traefik.http.routers.https-app-getlock-tech.entrypoints=https",
+          "traefik.http.routers.https-app-getlock-tech.rule=Host(\"app.getlock.tech\")",
+          "traefik.http.routers.https-app-getlock-tech.tls=true",
+          "traefik.http.routers.https-app-getlock-tech.tls.certresolver=http",
         ]
       }
 
