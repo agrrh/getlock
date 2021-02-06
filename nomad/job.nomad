@@ -333,8 +333,8 @@ EOF
       }
 
       resources {
-        cpu    = 200
-        memory = 64
+        cpu    = 100
+        memory = 32
       }
 
       logs {
