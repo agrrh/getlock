@@ -278,6 +278,76 @@ EOF
     }
   }
 
+  group "front" {
+    count = 2
+
+    spread {
+      attribute = "${node.unique.name}"
+    }
+
+    update {
+      max_parallel = 1
+    }
+
+    ephemeral_disk {
+      sticky = true
+      migrate = true
+      size = 100
+    }
+
+    task "nginx" {
+      driver = "docker"
+
+      config {
+        force_pull = true
+        image = "agrrh/getlock-front:dev"
+
+        ports = ["http"]
+      }
+
+      service {
+        check {
+          type     = "http"
+          port     = "http"
+          path     = "/"
+          interval = "10s"
+          timeout  = "1s"
+        }
+
+        port = "http"
+
+        tags = [
+          "traefik.enable=true",
+          # middlewares
+          "traefik.http.middlewares.redir-https.redirectscheme.scheme=https",
+          # http
+          "traefik.http.routers.http-getlock-tech-docs.entrypoints=http",
+          "traefik.http.routers.http-getlock-tech-docs.rule=Host(\"app.getlock.tech\")",
+          "traefik.http.routers.http-getlock-tech-docs.middlewares=redir-https",
+          # https
+          "traefik.http.routers.https-getlock-tech-docs.entrypoints=https",
+          "traefik.http.routers.https-getlock-tech-docs.rule=Host(\"app.getlock.tech\")",
+          "traefik.http.routers.https-getlock-tech-docs.tls=true",
+          "traefik.http.routers.https-getlock-tech-docs.tls.certresolver=http",
+        ]
+      }
+
+      resources {
+        cpu    = 200
+        memory = 64
+      }
+
+      logs {
+        max_files     = 2
+        max_file_size = 10
+      }
+    }
+
+    network {
+      port "http" { to = 80 }
+    }
+  }
+
   group "docs" {
     count = 2
 
