@@ -6,6 +6,12 @@ job "getlock" {
   group "storage" {
     count = 1
 
+    affinity {
+      attribute = "${meta.class}"
+      value     = "storage"
+      weight    = 100
+    }
+
     ephemeral_disk {
       sticky = true
       migrate = true
@@ -31,7 +37,7 @@ EOF
         image = "redis:5.0.10"
 
         volumes = [
-          "local/redis.conf:/usr/local/etc/redis/redis.conf"
+          "local/redis.conf:/usr/local/etc/redis/redis.conf",
         ]
 
         command = "redis-server"
@@ -69,18 +75,14 @@ EOF
   group "api-v1" {
     count = 2
 
+    affinity {
+      attribute = "${meta.class}"
+      value     = "compute"
+      weight    = 100
+    }
+
     spread {
       attribute = "${node.unique.name}"
-    }
-
-    update {
-      max_parallel = 1
-    }
-
-    ephemeral_disk {
-      sticky = true
-      migrate = true
-      size = 200
     }
 
     task "getlock" {
@@ -175,18 +177,14 @@ EOF
   group "api-v2" {
     count = 3
 
+    affinity {
+      attribute = "${meta.class}"
+      value     = "compute"
+      weight    = 100
+    }
+
     spread {
       attribute = "${node.unique.name}"
-    }
-
-    update {
-      max_parallel = 1
-    }
-
-    ephemeral_disk {
-      sticky = true
-      migrate = true
-      size = 200
     }
 
     task "getlock" {
@@ -281,18 +279,14 @@ EOF
   group "front" {
     count = 2
 
+    affinity {
+      attribute = "${meta.class}"
+      value     = "web"
+      weight    = 100
+    }
+
     spread {
       attribute = "${node.unique.name}"
-    }
-
-    update {
-      max_parallel = 1
-    }
-
-    ephemeral_disk {
-      sticky = true
-      migrate = true
-      size = 100
     }
 
     task "nginx" {
@@ -351,18 +345,14 @@ EOF
   group "docs" {
     count = 2
 
+    affinity {
+      attribute = "${meta.class}"
+      value     = "web"
+      weight    = 100
+    }
+
     spread {
       attribute = "${node.unique.name}"
-    }
-
-    update {
-      max_parallel = 1
-    }
-
-    ephemeral_disk {
-      sticky = true
-      migrate = true
-      size = 100
     }
 
     task "nginx" {
