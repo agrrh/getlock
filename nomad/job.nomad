@@ -6,10 +6,9 @@ job "getlock" {
   group "storage" {
     count = 1
 
-    affinity {
+    constraint {
       attribute = "${meta.class}"
       value     = "storage"
-      weight    = 100
     }
 
     ephemeral_disk {
@@ -75,10 +74,9 @@ EOF
   group "api-v1" {
     count = 2
 
-    affinity {
+    constraint {
       attribute = "${meta.class}"
       value     = "compute"
-      weight    = 100
     }
 
     spread {
@@ -177,10 +175,9 @@ EOF
   group "api-v2" {
     count = 3
 
-    affinity {
+    constraint {
       attribute = "${meta.class}"
       value     = "compute"
-      weight    = 100
     }
 
     spread {
@@ -279,10 +276,9 @@ EOF
   group "front" {
     count = 2
 
-    affinity {
+    constraint {
       attribute = "${meta.class}"
       value     = "web"
-      weight    = 100
     }
 
     spread {
@@ -345,10 +341,9 @@ EOF
   group "docs" {
     count = 2
 
-    affinity {
+    constraint {
       attribute = "${meta.class}"
       value     = "web"
-      weight    = 100
     }
 
     spread {
