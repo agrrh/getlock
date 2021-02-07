@@ -6,9 +6,17 @@ job "getlock" {
   group "storage" {
     count = 1
 
-    constraint {
+    # FIXME Replace with constraint storage when there would be suitable nodes in cluster
+    affinity {
       attribute = "${meta.class}"
-      value     = "storage"
+      value     = "compute"
+      weight    = 100
+    }
+    affinity {
+      attribute = "${meta.class}"
+      operator  = "!="
+      value     = "compute"
+      weight    = -100
     }
 
     ephemeral_disk {
