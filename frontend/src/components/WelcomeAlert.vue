@@ -4,16 +4,16 @@
       Welcome, user!
     </h1>
     <div v-if="isLoading" class="mt-4">
-      <p class="welcome-alert-text font-weight-medium">
-        Loading list of sessions...
-      </p>
-      <v-progress-circular
-        class="mt-2"
-        :size="70"
-        :width="7"
-        color="#009688"
-        indeterminate
-      ></v-progress-circular>
+      <div class="welcome-alert-text loader-wrp font-weight-medium">
+        <p class="loader-wrp__text">Loading list of sessions</p>
+        <v-progress-circular
+          class="ml-4"
+          :size="16"
+          :width="2"
+          color="#009688"
+          indeterminate
+        ></v-progress-circular>
+      </div>
     </div>
     <div v-else>
       <p class="welcome-alert-text mb-0 mt-4"> {{ quantityMessage }}</p>
@@ -53,5 +53,15 @@ export default {
 <style scoped>
 .welcome-alert-text {
   font-size: 18px;
+}
+
+.loader-wrp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-wrp__text {
+  margin-bottom: 0;
 }
 </style>

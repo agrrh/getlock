@@ -57,12 +57,13 @@ export default {
         const data = Axios.get('https://www.uuidgenerator.net/api/version4');
         resolve(data);
       })
+      console.log('fetching id reporting!')
       return id;
     },
     async putLock() {
       await this.getId()
-      .then(response => {
-        Axios.put(`https://getlock.tech/v2/~test/${response.data}`,
+      .then(async (response) => {
+        await Axios.put(`https://getlock.tech/v2/~test/${response.data}`,
           {},
           {
             headers: {
@@ -73,6 +74,7 @@ export default {
       })
       .then(response => {
         console.log(response);
+        console.log('adding session reporting!')
         this.$store.dispatch('fetchData');
       })
       .catch(err => {
