@@ -53,7 +53,7 @@ class Lock(GenericObject):
         if data:
             data.update({
                 "age": int(time.time()) - data.get("timestamp"),
-                "expired": data.get("timestamp") + data.get("ttl") > time.time(),
+                "expired": data.get("timestamp") + data.get("ttl") < time.time(),
             })
 
         return data
