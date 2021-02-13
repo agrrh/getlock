@@ -70,6 +70,9 @@ class LockController(Resource):
 
         lock._load_self()
 
+        if lock.expired:
+            return {"message": "Lock has expired", "lock": lock._dump()}, 410
+
         return {"message": "Lock found", "lock": lock._dump()}, 200
 
     def delete(self, namespace_id: str, lock_id: str):
