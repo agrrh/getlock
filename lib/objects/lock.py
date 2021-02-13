@@ -48,7 +48,10 @@ class Lock(GenericObject):
         data = self._storage.read(self._storage_id)
 
         if data:
-            data.update({"age": int(time.time()) - data.get("timestamp")})
+            data.update({
+                "age": int(time.time()) - data.get("timestamp"),
+                "expired": data.get("timestamp") + data.get("ttl") > time.time(),
+            })
 
         return data
 
