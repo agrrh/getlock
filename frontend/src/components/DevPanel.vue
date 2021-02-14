@@ -57,7 +57,6 @@ export default {
         const data = Axios.get('https://www.uuidgenerator.net/api/version4');
         resolve(data);
       })
-      console.log('fetching id reporting!')
       return id;
     },
     async putLock() {
@@ -74,7 +73,6 @@ export default {
       })
       .then(response => {
         console.log(response);
-        console.log('adding session reporting!')
         this.$store.dispatch('fetchData');
       })
       .catch(err => {

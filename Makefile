@@ -1,8 +1,5 @@
 build:
-	docker build . -t local/getlock
+	docker-compose build
 
-run: build
-	docker run --rm -ti --network host local/getlock
-
-build-docs:
-	docker build . -f docs.Dockerfile -t local/getlock-docs
+run:
+	docker-compose build

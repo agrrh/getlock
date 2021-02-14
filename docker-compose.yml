@@ -1,0 +1,27 @@
+---
+
+version: '3'
+
+services:
+  redis:
+    image: redis
+    
+  getlock:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local/getlock:dev
+    environment:
+      - CONFIG_PATH=/app/config.docker.yml
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./config.docker.yml:/app/config.docker.yml"
+  
+  docs:
+    build:
+      context: .
+      dockerfile: docs.Dockerfile
+    image: local:getlock-docs:dev
+    ports:
+      - "8001:80"
