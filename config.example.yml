@@ -11,3 +11,7 @@ redis:
   port: 6379
   db: 0
   password: null
+
+oauth:
+  client_id: foo-bar-baz-token
+  client_secret: secret
