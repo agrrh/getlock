@@ -13,6 +13,9 @@ class Lock(GenericObject):
     # Some random UUID to make lock UUIDs persistent
     ROOT_UUID = uuid.UUID("0bbbf540-1e6d-47f9-ab52-0d3d6c814018")
 
+    # How long store expired records
+    EXPIRE_STORE = 3600
+
     def __init__(self, storage, namespace, id, **kwargs):
         self.id = id
         self.uuid = str(
@@ -40,7 +43,7 @@ class Lock(GenericObject):
         self.namespace.update()
 
         self._storage.create(self._storage_id, self._dump())
-        self._storage.ttl(self._storage_id, self.ttl)
+        self._storage.ttl(self._storage_id, self.ttl + self.EXPIRE_STORE)
 
     # FIXME Rework this dirty hack
     #   We need always dump current Lock age, not from DB, but current one
@@ -48,7 +51,10 @@ class Lock(GenericObject):
         data = self._storage.read(self._storage_id)
 
         if data:
-            data.update({"age": int(time.time()) - data.get("timestamp")})
+            data.update({
+                "age": int(time.time()) - data.get("timestamp"),
+                "expired": data.get("timestamp") + data.get("ttl") < time.time(),
+            })
 
         return data
 
