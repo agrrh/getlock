@@ -225,7 +225,7 @@ EOF
 
       config {
         force_pull = true
-        image = "agrrh/getlock:v1.0.1"
+        image = "agrrh/getlock:v1.0.2"
 
         volumes = [
           "local/config.yml:/app/config.yml"
