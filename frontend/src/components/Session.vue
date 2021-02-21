@@ -26,7 +26,7 @@
           {{ timeLeft > 0 ? ttlToRealTime : '-' }}
         </div>
         <p 
-          :style="status.active ? 'color: #607d8b' : 'color: #009688'" 
+          :style="status.active ? 'color: #4a9ac1' : 'color: #009688'" 
           class="font-weight-bold mb-3"
         >
           {{ status.message }}
@@ -74,10 +74,10 @@ export default {
       return this.age / this.ttl * 100
     },
     ttlToRealTime() {
-      var sec_num = parseInt(this.timeLeft, 10);
-      var hours   = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-      var seconds = sec_num - (hours * 3600) - (minutes * 60);
+      let secs = parseInt(this.timeLeft, 10);
+      let hours   = Math.floor(secs / 3600);
+      let minutes = Math.floor((secs - (hours * 3600)) / 60);
+      let seconds = secs - (hours * 3600) - (minutes * 60);
 
       if (hours   < 10) {hours   = "0"+hours;}
       if (minutes < 10) {minutes = "0"+minutes;}
