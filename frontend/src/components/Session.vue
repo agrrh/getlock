@@ -4,7 +4,9 @@
       appear 
       mode="out-in"
     >
-      <v-card class="py-4 px-6">
+      <v-card 
+        class="py-4 px-6"
+      >
         <div>
           <span class="font-weight-bold">
             Session name:
@@ -17,17 +19,29 @@
           </span> 
           {{ uuid }}
         </div>
+        <div>
+          <span class="font-weight-bold">
+            Remaining time:
+          </span> 
+          {{ timeLeft > 0 ? ttlToRealTime : '-' }}
+        </div>
         <p 
-          :style="status.active ? 'color: #607d8b' : 'color: #009688'" 
+          :style="status.active ? 'color: #4a9ac1' : 'color: #009688'" 
           class="font-weight-bold mb-3"
         >
           {{ status.message }}
         </p>
         <v-progress-linear
-          color="#3f51b5"
+          color="info"
           :buffer-value="progressValue"
           stream
         ></v-progress-linear>
+        <div 
+          class="inactive-time"
+          v-if="!status.active"
+        >
+          Ended {{ timeleftToMins }} minutes ago
+        </div>
       </v-card>
     </v-slide-x-transition>
   </v-col>
@@ -58,16 +72,29 @@ export default {
     },
     progressValue() {
       return this.age / this.ttl * 100
-    }
+    },
+    ttlToRealTime() {
+      let secs = parseInt(this.timeLeft, 10);
+      let hours   = Math.floor(secs / 3600);
+      let minutes = Math.floor((secs - (hours * 3600)) / 60);
+      let seconds = secs - (hours * 3600) - (minutes * 60);
+
+      if (hours   < 10) {hours   = "0"+hours;}
+      if (minutes < 10) {minutes = "0"+minutes;}
+      if (seconds < 10) {seconds = "0"+seconds;}
+      return hours+':'+minutes+':'+seconds;
+    },
+    timeleftToMins() {
+      const mins = Math.floor(this.timeLeft / 60)
+      return Math.abs(mins);
+    },
   },
   methods: {
     countDownTimer() {
-      if (this.timeLeft > 0) {
-        setTimeout(() => {
-          this.age += 1
-          this.countDownTimer()
-        }, 1000)
-      }
+      setTimeout(() => {
+        this.age += 1
+        this.countDownTimer()
+      }, 1000)
     }
   },
   watch: {
@@ -81,7 +108,30 @@ export default {
     }
   },
   created() {
-    this.countDownTimer()
+    this.countDownTimer();
+    if (this.lock.expired) {
+      this.status.message = 'Done!';
+      this.status.active = false;
+    }
   }
 }
 </script>
+
+<style scoped>
+  .expired {
+    opacity: 0.7;
+  }
+
+  .inactive-time {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  .inactive-time p {
+    margin-bottom: 0;
+    margin-left: 8px;
+  }
+</style>

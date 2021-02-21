@@ -7,7 +7,7 @@
       <v-row>
         <v-col v-if="$store.state.locks.length !== 0">
           <Session 
-            v-for="lock in $store.state.locks" 
+            v-for="lock in sortByActivity" 
             :key="lock.uuid"
             :lock="lock"
           />
@@ -31,6 +31,20 @@ export default {
     fetchData() {
       this.$store.dispatch('fetchData');
     }
+  },
+  computed: {
+    sortByTtl() {
+      const locks = this.$store.state.locks;
+      return locks.sort((a, b) => {
+        return a.ttl - b.ttl;
+      })
+    },
+    sortByActivity() {
+      const sortedByTtl = this.sortByTtl;
+      return sortedByTtl.sort((a, b) => {
+        return a.expired - b.expired;
+      })
+    },
   },
   mounted() {
     this.fetchData();
