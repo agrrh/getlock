@@ -74,8 +74,7 @@ export default {
       })
       .then(response => {
         console.log(response);
-        console.log('adding session reporting!')
-        this.$store.dispatch('fetchData');
+        this.$store.dispatch('fetchData', true);
       })
       .catch(err => {
         console.log(err)
