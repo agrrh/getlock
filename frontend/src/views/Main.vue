@@ -28,8 +28,14 @@ export default {
     WelcomeAlert,
   },
   methods: {
-    fetchData() {
-      this.$store.dispatch('fetchData');
+    fetchData(setLoader) {
+      this.$store.dispatch('fetchData', setLoader);
+    },
+    resendReq() {
+      setTimeout(() => {
+        this.fetchData(false);
+        this.resendReq()
+      }, 5000)
     }
   },
   computed: {
@@ -47,7 +53,8 @@ export default {
     },
   },
   mounted() {
-    this.fetchData();
+    this.fetchData(true);
+    this.resendReq();
   }
 }
 </script>
