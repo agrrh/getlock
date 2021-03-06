@@ -9,9 +9,9 @@ COPY ./ ./
 
 RUN npm install
 
-RUN npm run build
+RUN npm run build --production
 
-# Stage: publish
+# Stage: final
 
 FROM nginx:1.18.0
 
