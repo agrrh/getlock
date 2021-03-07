@@ -1,6 +1,6 @@
 <template>
-  <v-col class="text-center mt-12">
-    <h1 style="font-size: 56px">
+  <v-col class="mt-8">
+    <h1 style="font-size: 40px">
       Welcome, user!
     </h1>
     <div v-if="isLoading" class="mt-4">
@@ -16,11 +16,10 @@
       </div>
     </div>
     <div v-else>
-      <p class="welcome-alert-text mb-0 mt-4"> {{ quantityMessage }}</p>
+      <p class="welcome-alert-text mb-0 mt-2"> {{ quantityMessage }}</p>
       <p class="welcome-alert-text" v-if="!sessionsCount">
-        You can check out 
-        <a style="color: #009688">the official API guide</a>
-        in order to add some.
+        You can check out quick guide below in order to add some,
+        or visit <a class="welcome-alert__link" href="https://getlock.tech/">getlock.tech</a> for more examples and info.
       </p>
     </div>
   </v-col>
@@ -52,16 +51,20 @@ export default {
 
 <style scoped>
 .welcome-alert-text {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .loader-wrp {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .loader-wrp__text {
   margin-bottom: 0;
+}
+
+.welcome-alert__link {
+  color: #009688;
 }
 </style>
