@@ -6,7 +6,7 @@
   >
     <v-container>
       <v-row>
-        <div class="d-flex align-center">
+        <div class="d-flex align-center ml-6">
           <h1>
             <router-link class="getlock-logo" to="/">GETLOCK</router-link>
           </h1>

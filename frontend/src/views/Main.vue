@@ -1,16 +1,19 @@
 <template>
   <v-main>
     <v-container>
+      <WelcomeAlert/>
       <v-row>
-        <WelcomeAlert/>
-      </v-row>
-      <v-row>
-        <v-col v-if="$store.state.locks.length !== 0">
+        <v-col v-if="$store.state.locks.length !== 0" cols=8>
           <Session 
             v-for="lock in sortByActivity" 
             :key="lock.uuid"
             :lock="lock"
           />
+        </v-col>
+        <v-col 
+          :cols="$store.state.locks.length ? 4 : 12"
+        >
+          <ApiGuide/>
         </v-col>
       </v-row>
     </v-container>
@@ -19,6 +22,7 @@
 
 <script>
 import Session from '../components/Session';
+import ApiGuide from '../components/ApiGuide';
 import WelcomeAlert from '../components/WelcomeAlert';
 
 export default {
@@ -26,6 +30,7 @@ export default {
   components: {
     Session,
     WelcomeAlert,
+    ApiGuide
   },
   methods: {
     fetchData(setLoader) {
