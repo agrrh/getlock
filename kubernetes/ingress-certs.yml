@@ -1,0 +1,31 @@
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: getlock-tech
+  namespace: getlock
+spec:
+  secretName: cert-getlock-tech
+  commonName: getlock.tech
+  dnsNames:
+    - getlock.tech
+  issuerRef:
+    kind: ClusterIssuer
+    name: acme-prod
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: app-getlock-tech
+  namespace: getlock
+spec:
+  secretName: cert-app-getlock-tech
+  commonName: app.getlock.tech
+  dnsNames:
+    - app.getlock.tech
+  issuerRef:
+    kind: ClusterIssuer
+    name: acme-prod

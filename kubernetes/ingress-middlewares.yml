@@ -1,0 +1,35 @@
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: https-only
+  namespace: getlock
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: api-v1-stripprefix
+  namespace: getlock
+spec:
+  stripPrefix:
+    prefixes:
+      - /v1
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: api-v2-stripprefix
+  namespace: getlock
+spec:
+  stripPrefix:
+    prefixes:
+      - /v2

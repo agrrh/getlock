@@ -1,0 +1,87 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: getlock
+  labels:
+    app: front
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: agrrh/getlock-front:dev
+          ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+  namespace: getlock
+  labels:
+    app: front
+spec:
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-front
+  namespace: getlock
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`app.getlock.tech`)
+      middlewares:
+        - name: https-only
+          namespace: getlock
+      services:
+        - name: front
+          namespace: getlock
+          passHostHeader: true
+          port: 80
+          scheme: http
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: https-front
+  namespace: getlock
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`app.getlock.tech`)
+      middlewares: []
+      services:
+        - name: front
+          namespace: getlock
+          passHostHeader: true
+          port: 80
+          scheme: http
+  tls:
+    secretName: cert-app-getlock-tech

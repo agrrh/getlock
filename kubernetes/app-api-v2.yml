@@ -1,0 +1,138 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-v2-config
+  namespace: getlock
+data:
+  config: |
+    ---
+
+    flask:
+      debug: false
+      threaded: true
+      host: 0.0.0.0
+      port: 8000
+
+    redis:
+      host: redis.getlock.svc.cluster.local
+      port: 6379
+      db: 1
+      password: null
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-v2
+  namespace: getlock
+  labels:
+    app: api
+    api-version: "v2"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+      api-version: "v2"
+  template:
+    metadata:
+      labels:
+        app: api
+        api-version: "v2"
+    spec:
+      containers:
+        - name: api-v2
+          image: agrrh/getlock:v1.0.2
+          command:
+            - python3
+          args:
+            - getlock.py
+          env:
+            - name: CONFIG_PATH
+              value: /app/config/config.yml
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: api-v2-config
+            items:
+            - key: config
+              path: config.yml
+
+# TODO /health
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-v2
+  namespace: getlock
+  labels:
+    app: api
+    api-version: "v2"
+spec:
+  selector:
+    app: api
+    api-version: "v2"
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-api-v2
+  namespace: getlock
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host("getlock.tech") && PathPrefix("/v2/")
+      middlewares:
+        - name: https-only
+          namespace: getlock
+        - name: api-v2-stripprefix
+          namespace: getlock
+      services:
+        - name: api-v2
+          namespace: getlock
+          passHostHeader: true
+          port: 80
+          scheme: http
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: https-api-v2
+  namespace: getlock
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host("getlock.tech") && PathPrefix("/v2/")
+      middlewares:
+        - name: api-v2-stripprefix
+          namespace: getlock
+      services:
+        - name: api-v2
+          namespace: getlock
+          passHostHeader: true
+          port: 80
+          scheme: http
+  tls:
+    secretName: cert-getlock-tech
