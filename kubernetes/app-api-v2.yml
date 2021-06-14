@@ -32,7 +32,7 @@ metadata:
     app: api
     api-version: "v2"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: api
@@ -45,11 +45,11 @@ spec:
     spec:
       containers:
         - name: api-v2
-          image: agrrh/getlock:v1.0.3
+          image: agrrh/getlock:v1.0.2
           command:
             - python3
           args:
-            - getlock.py
+            - getlock.pyt
           env:
             - name: CONFIG_PATH
               value: /app/config/config.yml
