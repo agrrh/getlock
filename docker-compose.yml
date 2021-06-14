@@ -5,7 +5,7 @@ version: '3'
 services:
   redis:
     image: redis
-    
+
   getlock:
     build:
       context: .
@@ -17,11 +17,21 @@ services:
       - "8000:8000"
     volumes:
       - "./config.docker.yml:/app/config.docker.yml"
-  
+
   docs:
     build:
       context: .
       dockerfile: docs.Dockerfile
-    image: local:getlock-docs:dev
+    image: local/getlock-docs:dev
     ports:
       - "8001:80"
+
+  front:
+    build:
+      context: frontend/
+      dockerfile: Dockerfile
+    image: local/getlock-front:dev
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - "8002:80"
