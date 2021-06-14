@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: api-v2
-          image: agrrh/getlock:v1.0.3
+          image: agrrh/getlock:v1.0.2
           command:
             - python3
           args:
