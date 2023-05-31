@@ -2,13 +2,13 @@
 
 >Distributed locks for everyone!
 
-[GetLock.tech](https://getlock.tech/) service exists for those who need to get some kind of session lock or simple semaphore-like mechanism.
+[getlock.agrrh.com](https://getlock.agrrh.com/) service exists for those who need to get some kind of session lock or simple semaphore-like mechanism.
 
 Actual case was absence of proper concurrency limit for [BitBucket Pipelines](https://jira.atlassian.com/browse/BCLOUD-12821).
 
 # Usage
 
-### `PUT https://getlock.tech/v1/<uuid>`
+### `PUT https://getlock.agrrh.com/v1/<uuid>`
 
 Create new lock or update existing one.
 
@@ -21,7 +21,7 @@ Response codes:
 - `201` created
 - `200` refreshed
 
-### `GET https://getlock.tech/v1/<uuid>`
+### `GET https://getlock.agrrh.com/v1/<uuid>`
 
 Check if lock is active.
 
@@ -30,7 +30,7 @@ Response codes:
 - `423` for active
 - `404` for other cases
 
-### `DELETE https://getlock.tech/v1/<uuid>`
+### `DELETE https://getlock.agrrh.com/v1/<uuid>`
 
 Release existing lock.
 
@@ -54,7 +54,7 @@ Worker logic then could look like following:
 ```sh
 echo "Checking if another job is running ..."
 
-while [ "$(curl \"https://getlock.tech/v1/${YOUR_JOB_UUID}\" | jq '.locked')" = "true" ]; do
+while [ "$(curl \"https://getlock.agrrh.com/v1/${YOUR_JOB_UUID}\" | jq '.locked')" = "true" ]; do
   echo "Locked, waiting for free spot ..."
   sleep 1
 done
@@ -65,7 +65,7 @@ echo "Acquiring lock ..."
 
 # NOTE Prefer lower TTL values while refreshing lock periodically
 #   to not waste time in case job has failed
-curl -X PUT -d ttl=3600 "https://getlock.tech/v1/${YOUR_JOB_UUID}"
+curl -X PUT -d ttl=3600 "https://getlock.agrrh.com/v1/${YOUR_JOB_UUID}"
 
 echo "Starting payload ..."
 
@@ -75,7 +75,7 @@ echo "Payload done"
 
 echo "Releasing lock ..."
 
-curl -X DELETE "https://getlock.tech/v1/${YOUR_JOB_UUID}"
+curl -X DELETE "https://getlock.agrrh.com/v1/${YOUR_JOB_UUID}"
 
 echo "Job done"
 ```

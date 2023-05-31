@@ -4,7 +4,7 @@ site_name: GetLock
 
 copyright: Copyright &copy; Kirill Kovalev / agrrh
 
-repo_url: https://github.com/agrrh/getlock
+repo_url: https://github.com/getlock/getlock
 
 nav:
   - Home: index.md
@@ -24,6 +24,6 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/r/agrrh/getlock
+      link: https://hub.docker.com/r/getlock/getlock
     - icon: fontawesome/brands/github
-      link: https://github.com/agrrh/getlock
+      link: https://github.com/getlock/getlock
