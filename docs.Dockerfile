@@ -10,7 +10,8 @@ WORKDIR /app
 
 RUN pip install \
   mkdocs==1.1.2 \
-  mkdocs-material==6.1.7
+  mkdocs-material==6.1.7 \
+  jinja2==3.0.3
 
 COPY ./mkdocs.yml ./
 COPY ./*.md ./
