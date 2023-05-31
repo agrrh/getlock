@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: front
-          image: agrrh/getlock-front:dev
+          image: agrrh/getlock-front:dev-31052023
           ports:
           - containerPort: 80
 
