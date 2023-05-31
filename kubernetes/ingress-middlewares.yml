@@ -33,15 +33,3 @@ spec:
   stripPrefix:
     prefixes:
       - /v2
-
----
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: app-stripprefix
-  namespace: getlock
-spec:
-  stripPrefix:
-    prefixes:
-      - /app
