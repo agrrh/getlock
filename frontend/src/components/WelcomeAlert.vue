@@ -19,7 +19,7 @@
       <p class="welcome-alert-text mb-0 mt-2"> {{ quantityMessage }}</p>
       <p class="welcome-alert-text" v-if="!sessionsCount">
         You can check out quick guide below in order to add some,
-        or visit <a class="welcome-alert__link" href="https://getlock.tech/">getlock.tech</a> for more examples and info.
+        or visit <a class="welcome-alert__link" href="https://getlock.agrrh.com/">getlock.agrrh.com</a> for more examples and info.
       </p>
     </div>
   </v-col>
@@ -33,7 +33,7 @@ export default {
       switch (this.sessionsCount) {
         case 0:
             return 'There are currently no active sessions'
-        case 1: 
+        case 1:
             return 'There is currently 1 active session'
         default:
             return `There are currently ${this.sessionsCount} active sessions`

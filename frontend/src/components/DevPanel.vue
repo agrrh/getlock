@@ -1,9 +1,9 @@
 <template>
-  <v-slide-x-transition 
-    appear 
-    mode="out-in" 
+  <v-slide-x-transition
+    appear
+    mode="out-in"
   >
-    <v-navigation-drawer 
+    <v-navigation-drawer
       v-if="$store.state.devPanelVisible"
       fixed
       mini-variant
@@ -63,7 +63,7 @@ export default {
     async putLock() {
       await this.getId()
       .then(async (response) => {
-        await Axios.put(`https://getlock.tech/v2/~test/${response.data}`,
+        await Axios.put(`https://getlock.agrrh.com/v2/~test/${response.data}`,
           {},
           {
             headers: {

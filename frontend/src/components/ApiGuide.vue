@@ -1,7 +1,7 @@
 <template>
   <v-fade-transition appear>
     <div>
-      <v-tabs 
+      <v-tabs
         v-model="tab"
         :centered="$store.state.locks.length ? true : false"
         color="secondary"
@@ -10,9 +10,9 @@
         <v-tab>Curl</v-tab>
         <v-tab>JS</v-tab>
       </v-tabs>
-      <v-tabs-items 
+      <v-tabs-items
         v-model="tab"
-        class="apiguide-tab-content"  
+        class="apiguide-tab-content"
       >
         <!-- CURL -->
         <v-tab-item>
@@ -20,13 +20,13 @@
             Creating namespace:
           </p>
           <pre class="apiguide-codeblock">
-            curl -X PUT -d "https://getlock.tech/v2/${YOUR_NAMESPACE}"
+            curl -X PUT -d "https://getlock.agrrh.com/v2/${YOUR_NAMESPACE}"
           </pre>
           <p class="apiguide-caption">
             Adding session:
           </p>
           <pre class="apiguide-codeblock">
-            curl -X PUT -d ttl=3600 "https://getlock.tech/v2/${YOUR_NAMESPACE}/${SESSION_NAME}"
+            curl -X PUT -d ttl=3600 "https://getlock.agrrh.com/v2/${YOUR_NAMESPACE}/${SESSION_NAME}"
           </pre>
         </v-tab-item>
         <!-- JS -->
@@ -35,13 +35,13 @@
             Creating namespace:
           </p>
           <pre class="apiguide-codeblock">
-            curl -X PUT -d "https://getlock.tech/v2/${YOUR_NAMESPACE}"
+            curl -X PUT -d "https://getlock.agrrh.com/v2/${YOUR_NAMESPACE}"
           </pre>
           <p class="apiguide-caption">
             Adding session using Axios
           </p>
           <pre class="apiguide-codeblock">
-            Axios.put(`https://getlock.tech/v2/${YOUR_NAMESPACE}/${SESSION_NAME}`,
+            Axios.put(`https://getlock.agrrh.com/v2/${YOUR_NAMESPACE}/${SESSION_NAME}`,
               {},
               {
                 headers: {
@@ -57,7 +57,7 @@
             })
           </pre>
         </v-tab-item>
-      </v-tabs-items>  
+      </v-tabs-items>
     </div>
   </v-fade-transition>
 </template>
