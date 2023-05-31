@@ -52,10 +52,10 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`getlock.agrrh.com`) && PathPrefix("/app/")
+      match: (Host(`getlock.agrrh.com`) || Host(`getlock.5426b488.nip.io`)) && PathPrefix("/app/")
       middlewares:
-        - name: https-only
-          namespace: getlock
+        - name: request-headers
+          namespace: traefik
         - name: app-stripprefix
           namespace: getlock
       services:

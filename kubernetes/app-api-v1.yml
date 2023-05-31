@@ -101,10 +101,10 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host("getlock.agrrh.com") && PathPrefix("/v1/")
+      match: (Host(`getlock.agrrh.com`) || Host(`getlock.5426b488.nip.io`)) && PathPrefix("/v1/")
       middlewares:
-        - name: https-only
-          namespace: getlock
+        - name: request-headers
+          namespace: traefik
         - name: api-v1-stripprefix
           namespace: getlock
       services:

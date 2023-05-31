@@ -52,10 +52,10 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`getlock.agrrh.com`)
+      match: Host(`getlock.agrrh.com`) || Host(`getlock.5426b488.nip.io`)
       middlewares:
-        - name: https-only
-          namespace: getlock
+        - name: request-headers
+          namespace: traefik
       services:
         - name: docs
           namespace: getlock
