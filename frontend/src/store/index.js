@@ -40,7 +40,7 @@ export default new Vuex.Store({
   actions: {
     fetchData({commit}, setLoader) {
       setLoader ? commit('setLoading', true) : '';
-      Axios.get('https://getlock.tech/v2/~test',
+      Axios.get('https://getlock.agrrh.com/v2/~test',
         {
           headers: {
             'X-Getlock-Auth': 'test'
