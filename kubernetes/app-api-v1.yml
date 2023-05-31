@@ -101,7 +101,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host("getlock.tech") && PathPrefix("/v1/")
+      match: Host("getlock.agrrh.com") && PathPrefix("/v1/")
       middlewares:
         - name: https-only
           namespace: getlock
@@ -113,28 +113,3 @@ spec:
           passHostHeader: true
           port: 80
           scheme: http
-
----
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: https-api-v1
-  namespace: getlock
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host("getlock.tech") && PathPrefix("/v1/")
-      middlewares:
-        - name: api-v1-stripprefix
-          namespace: getlock
-      services:
-        - name: api-v1
-          namespace: getlock
-          passHostHeader: true
-          port: 80
-          scheme: http
-  tls:
-    secretName: cert-getlock-tech

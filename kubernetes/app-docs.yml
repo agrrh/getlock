@@ -52,7 +52,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`getlock.tech`)
+      match: Host(`getlock.agrrh.com`)
       middlewares:
         - name: https-only
           namespace: getlock
@@ -62,26 +62,3 @@ spec:
           passHostHeader: true
           port: 80
           scheme: http
-
----
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: https-docs
-  namespace: getlock
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`getlock.tech`)
-      middlewares: []
-      services:
-        - name: docs
-          namespace: getlock
-          passHostHeader: true
-          port: 80
-          scheme: http
-  tls:
-    secretName: cert-getlock-tech
