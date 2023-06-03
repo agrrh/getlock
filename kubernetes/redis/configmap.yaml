@@ -1,0 +1,14 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: getlock
+data:
+  redis-config: |
+    maxmemory 64mb
+    maxmemory-policy noeviction
+    appendonly yes
+    # NOTE Consider using "save 10x x" formula as each /health call leads to write-read-delete operations
+    save 30 6

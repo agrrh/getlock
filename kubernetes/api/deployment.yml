@@ -1,0 +1,41 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: getlock
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: main
+          image: agrrh/getlock:v1.0.3
+          command:
+            - python3
+          args:
+            - getlock.py
+          env:
+            - name: CONFIG_PATH
+              value: /app/config/config.yml
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - mountPath: /app/config
+              name: config
+      volumes:
+        - name: config
+          configMap:
+            name: api-config
+            items:
+            - key: config
+              path: config.yml

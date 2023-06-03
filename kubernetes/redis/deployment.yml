@@ -1,0 +1,48 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: getlock
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:5.0.10
+          command:
+            - redis-server
+            - "/redis-config/redis.conf"
+          # env:
+          #   - name: MASTER
+          #     value: "true"
+          ports:
+            - containerPort: 6379
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "128Mi"
+          volumeMounts:
+            - mountPath: /redis-data
+              name: data
+            - mountPath: /redis-config
+              name: config
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: redis-config
+            items:
+            - key: redis-config
+              path: redis.conf

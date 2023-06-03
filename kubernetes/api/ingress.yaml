@@ -1,0 +1,24 @@
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-api
+  namespace: getlock
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: (Host(`getlock.agrrh.com`) || Host(`getlock.5426b488.nip.io`)) && PathPrefix("/api/v1/")
+      middlewares:
+        - name: request-headers
+          namespace: traefik
+        - name: stripprefix-api-v1
+          namespace: getlock
+      services:
+        - name: api
+          namespace: getlock
+          passHostHeader: true
+          port: 80
+          scheme: http

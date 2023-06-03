@@ -1,0 +1,16 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: front
+  namespace: getlock
+  labels:
+    app: front
+spec:
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

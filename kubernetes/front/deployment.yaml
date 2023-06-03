@@ -1,0 +1,24 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front
+  namespace: getlock
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: agrrh/getlock-front:dev-31052023
+          ports:
+          - containerPort: 80

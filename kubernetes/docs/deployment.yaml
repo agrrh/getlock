@@ -1,0 +1,24 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docs
+  namespace: getlock
+  labels:
+    app: docs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docs
+  template:
+    metadata:
+      labels:
+        app: docs
+    spec:
+      containers:
+        - name: docs
+          image: agrrh/getlock-docs:v0.3.1
+          ports:
+          - containerPort: 80
