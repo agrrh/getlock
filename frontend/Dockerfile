@@ -9,6 +9,7 @@ COPY ./ ./
 
 RUN npm install
 
+# hadolint ignore=DL3059
 RUN npm run build
 
 # Stage: publish
